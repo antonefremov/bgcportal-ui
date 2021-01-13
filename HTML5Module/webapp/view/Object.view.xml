@@ -1,0 +1,219 @@
+<mvc:View
+	controllerName="ns.HTML5Module.controller.Object"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic"
+    xmlns:uxap="sap.uxap"
+    xmlns:l="sap.ui.layout"
+    height="100%">
+
+<uxap:ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" showEditHeaderButton="true"
+				editHeaderButtonPress="handleEditBtnPress">
+				<uxap:headerTitle>
+					<uxap:ObjectPageDynamicHeaderTitle>
+					<uxap:heading>
+					<Title text="{firstName} {lastName}" />
+				</uxap:heading>
+
+				<uxap:expandedContent>
+					<Text text="{categoryDesc}"/>
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+					<Text text="{categoryDesc}"/>
+				</uxap:snappedContent>
+
+				</uxap:ObjectPageDynamicHeaderTitle>
+				</uxap:headerTitle>
+				<uxap:headerContent>
+			    <FlexBox wrap="Wrap" fitContainer="true">
+                <l:VerticalLayout class="sapUiSmallMarginEnd">
+				    <Button icon="sap-icon://employee" type ="Transparent" enabled="false"/>
+				</l:VerticalLayout>
+
+				<l:VerticalLayout class="sapUiSmallMarginEnd">
+					<ObjectStatus title="Location" text="{location}"/>
+					<ObjectStatus title="Phone" text="{phone}"/>
+					<ObjectStatus title="Email" text="{email}"/>
+				</l:VerticalLayout>
+
+				<l:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="BGC Completion" />  
+                     <Label text="100%" />  
+				</l:VerticalLayout>
+
+				<l:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					 <Label text="Candidate Type" />
+                     <Label text="New Hire" />
+				</l:VerticalLayout>
+
+                <l:VerticalLayout class="sapUiSmallMarginEnd">
+					<Label text="Experience" />
+                    <Label text="{experience}"/>
+				</l:VerticalLayout>
+
+                <l:VerticalLayout class="sapUiSmallMarginEnd">
+					<Label text="Status" />
+                    <Label text="{statusDesc}"/>
+				</l:VerticalLayout>
+
+			     </FlexBox> 
+				</uxap:headerContent>
+				<uxap:ObjectPageSection titleUppercase="false" title="Screening Tasks">
+					<uxap:subSections>
+						<uxap:ObjectPageSubSection>
+							<uxap:blocks>
+                            	<SplitContainer
+                                    id="SplitContDemo"
+                                    initialDetail="EmploymentHistorydetailPage"
+                                    initialMaster="master">
+                                    <detailPages>
+                                        <Page 
+                                            id="EmploymentHistorydetailPage"
+                                            title="Employment History"
+                                            backgroundDesign= "Solid"
+                                            class="sapUiStdPage"
+                                            showNavButton="false"
+                                            >
+                                         	<Table
+                                                id="idEmployementHistoryTable"
+                                                width="auto"
+                                                noDataText=""
+                                                growing="true"
+                                                growingScrollToLoad="true"
+                                                updateFinished=".onUpdateFinished">
+                                                  <!-- items="{
+                                                            path: '/EmploymentHistory'
+                                                        }"> -->
+                                                <columns>
+                                                    <Column id="nameColumn">
+                                                        <Text text="{i18n>employerName}" id="nameColumnTitle"/>
+                                                    </Column>
+                                                    <Column id="categoryColumn">
+                                                        <Text text="{i18n>designation}" id="categoryColumnTitle"/>
+                                                    </Column>
+                                                    <Column id="dateTimeColumn">
+                                                        <Text text="{i18n>ctc}" id="dateTimeColumntTitle"/>
+                                                    </Column>
+                                                    <Column id="statusColumn" width="10%">
+                                                        <Text text="{i18n>email}" id="statusColumnTitle"/>
+                                                    </Column>
+                                                    <Column id="assignColumn" hAlign="Center">
+                                                        <Text text="{i18n>phone}" id="assignColumnTitle"/>
+                                                    </Column>
+                                                    <Column  hAlign="Center">
+                                                        <Text text="{i18n>Document}"/>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <Text text="{i18n>BGC Status}"/>
+                                                    </Column>
+                                                </columns>
+
+                                                <items>
+                                                    <ColumnListItem
+                                                        id="idTemplate"
+                                                        type="Navigation"
+                                                        press=".onPress">
+                                                        <cells>
+                                                            <ObjectIdentifier
+                                                                title="{employer}"/>
+                                                            <Text text="{designation}" />
+                                                            <Text text="{ctc}" />
+                                                            <Text text="{email}" />
+                                                            <Text text="{phone}" />
+                                                            <Text text="" />
+                                                            <Text text="" />
+                                                            
+                                                            
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </Page>
+                                        <Page 
+                                            id="DrugUseTestDetailPage"
+                                            title="Drug Use Test"
+                                            backgroundDesign= "Solid"
+                                            class="sapUiStdPage"
+                                            showNavButton="false"
+                                            >
+                                         	<Table
+                                                id="idDrugUseTestTable"
+                                                width="auto"
+                                                noDataText=""
+                                                growing="true"
+                                                growingScrollToLoad="true"
+                                                updateFinished=".onUpdateFinished">
+                                                  <!-- items="{
+                                                            path: '/DrugUseType'
+                                                        }"> -->
+                                                <columns>
+                                                    <Column>
+                                                        <Text text="Drug Type"/>
+                                                    </Column>
+                                                    <Column>
+                                                        <Text text="Test Requirement" />
+                                                    </Column>
+                                                    <Column >
+                                                        <Text text="Permissible Limit" />
+                                                    </Column>
+                                                    <Column width="10%">
+                                                        <Text text="Test Date" />
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <Text text="Test Results" />
+                                                    </Column>
+                                                    <Column  hAlign="Center">
+                                                        <Text text="Amount Deducted"/>
+                                                    </Column>
+                                                    <Column hAlign="Center">
+                                                        <Text text="Comments"/>
+                                                    </Column>
+                                                </columns>
+
+                                                <items>
+                                                    <ColumnListItem
+                                                        id="idDrugTableTemplate"
+                                                        type="Navigation"
+                                                        press=".onPress"
+                                                       >
+                                                        <cells>
+                                                            <ObjectIdentifier
+                                                                title="{drugType}"/>
+                                                            <Text text="" />
+                                                            <Text text="" />
+                                                            <Text text="" />
+                                                            <Text text="{testResult}" />
+                                                            <Text text="" />
+                                                            <Text text="" />
+                                                            
+                                                            
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </Page>
+                                    </detailPages>
+                                    <masterPages>
+                                        <Page
+                                            showHeader="false"
+                                            id="master"
+                                            backgroundDesign= "List"
+                                            class="sapUiStdPage">
+                                          <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="auto" class="sapUiResponsiveMargin">
+		                                  <content>
+                                          <List id="masterPageListID" itemPress="_navToDetailPage"> 
+                                            </List>
+                                         
+                                            </content>
+                                            </Panel>
+                                        </Page>
+                                    
+                                    </masterPages>
+                                </SplitContainer>
+							</uxap:blocks>
+						</uxap:ObjectPageSubSection>
+					</uxap:subSections>
+				</uxap:ObjectPageSection>
+			</uxap:ObjectPageLayout>
+</mvc:View>

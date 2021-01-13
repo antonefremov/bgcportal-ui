@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+    xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="CatalogService"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Agent" EntityType="CatalogService.Agent"/>
+                <EntitySet Name="BGCScreening" EntityType="CatalogService.BGCScreening">
+                    <NavigationPropertyBinding Path="screeningTasks" Target="ScreeningTask"/>
+                </EntitySet>
+                <EntitySet Name="Candidate" EntityType="CatalogService.Candidate">
+                    <NavigationPropertyBinding Path="employmentHistory" Target="EmploymentHistory"/>
+                </EntitySet>
+                <EntitySet Name="EmploymentHistory" EntityType="CatalogService.EmploymentHistory">
+                    <NavigationPropertyBinding Path="candidate" Target="Candidate"/>
+                </EntitySet>
+                <EntitySet Name="Request" EntityType="CatalogService.Request">
+                    <NavigationPropertyBinding Path="category" Target="RequestCategory"/>
+                    <NavigationPropertyBinding Path="status" Target="RequestStatus"/>
+                    <NavigationPropertyBinding Path="assignedToAgent" Target="Agent"/>
+                    <NavigationPropertyBinding Path="candidate" Target="Candidate"/>
+                    <NavigationPropertyBinding Path="bgcScreening" Target="BGCScreening"/>
+                </EntitySet>
+                <EntitySet Name="RequestCategory" EntityType="CatalogService.RequestCategory"/>
+                <EntitySet Name="RequestStatus" EntityType="CatalogService.RequestStatus"/>
+                <EntitySet Name="ScreeningTask" EntityType="CatalogService.ScreeningTask">
+                    <NavigationPropertyBinding Path="bgcScreening" Target="BGCScreening"/>
+                    <NavigationPropertyBinding Path="type" Target="ScreeningTaskType"/>
+                </EntitySet>
+                <EntitySet Name="ScreeningTaskType" EntityType="CatalogService.ScreeningTaskType"/>
+            </EntityContainer>
+            <EntityType Name="Agent">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="firstName" Type="Edm.String" MaxLength="64"/>
+                <Property Name="lastName" Type="Edm.String" MaxLength="64"/>
+            </EntityType>
+            <EntityType Name="BGCScreening">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="screeningTasks" Type="Collection(CatalogService.ScreeningTask)" Partner="bgcScreening">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="completion" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Candidate">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="positionTitle" Type="Edm.String" MaxLength="64"/>
+                <Property Name="firstName" Type="Edm.String" MaxLength="64"/>
+                <Property Name="lastName" Type="Edm.String" MaxLength="64"/>
+                <Property Name="experience" Type="Edm.String" MaxLength="32"/>
+                <Property Name="location" Type="Edm.String" MaxLength="64"/>
+                <Property Name="phone" Type="Edm.String" MaxLength="32"/>
+                <Property Name="email" Type="Edm.String" MaxLength="64"/>
+                <NavigationProperty Name="employmentHistory" Type="Collection(CatalogService.EmploymentHistory)" Partner="candidate">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="EmploymentHistory">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="employer" Type="Edm.String" MaxLength="64"/>
+                <Property Name="designation" Type="Edm.String" MaxLength="64"/>
+                <Property Name="ctc" Type="Edm.String" MaxLength="64"/>
+                <Property Name="phone" Type="Edm.String" MaxLength="32"/>
+                <Property Name="email" Type="Edm.String" MaxLength="64"/>
+                <NavigationProperty Name="candidate" Type="CatalogService.Candidate" Partner="employmentHistory">
+                    <ReferentialConstraint Property="candidate_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="candidate_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Request">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="category" Type="CatalogService.RequestCategory">
+                    <ReferentialConstraint Property="category_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <NavigationProperty Name="status" Type="CatalogService.RequestStatus">
+                    <ReferentialConstraint Property="status_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <NavigationProperty Name="assignedToAgent" Type="CatalogService.Agent">
+                    <ReferentialConstraint Property="assignedToAgent_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <NavigationProperty Name="candidate" Type="CatalogService.Candidate">
+                    <ReferentialConstraint Property="candidate_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <NavigationProperty Name="bgcScreening" Type="CatalogService.BGCScreening">
+                    <ReferentialConstraint Property="bgcScreening_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="category_ID" Type="Edm.Guid"/>
+                <Property Name="status_ID" Type="Edm.Guid"/>
+                <Property Name="assignedToAgent_ID" Type="Edm.Guid"/>
+                <Property Name="candidate_ID" Type="Edm.Guid"/>
+                <Property Name="bgcScreening_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="RequestCategory">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="description" Type="Edm.String" MaxLength="32"/>
+            </EntityType>
+            <EntityType Name="RequestStatus">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="description" Type="Edm.String" MaxLength="32"/>
+            </EntityType>
+            <EntityType Name="ScreeningTask">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="bgcScreening" Type="CatalogService.BGCScreening" Partner="screeningTasks">
+                    <ReferentialConstraint Property="bgcScreening_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <NavigationProperty Name="type" Type="CatalogService.ScreeningTaskType">
+                    <ReferentialConstraint Property="type_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="completion" Type="Edm.Int32"/>
+                <Property Name="bgcScreening_ID" Type="Edm.Guid"/>
+                <Property Name="type_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="ScreeningTaskType">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="32"/>
+                <Property Name="description" Type="Edm.String" MaxLength="32"/>
+            </EntityType>
+            <Annotations Target="CatalogService.BGCScreening/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.BGCScreening/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.BGCScreening/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.BGCScreening/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.EmploymentHistory/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.EmploymentHistory/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.EmploymentHistory/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.EmploymentHistory/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.Request/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.Request/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.Request/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.Request/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.ScreeningTask/createdAt">
+                <Annotation Term="Common.Label" String="Created On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.ScreeningTask/createdBy">
+                <Annotation Term="Common.Label" String="Created By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.ScreeningTask/modifiedAt">
+                <Annotation Term="Common.Label" String="Changed On"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+            <Annotations Target="CatalogService.ScreeningTask/modifiedBy">
+                <Annotation Term="Common.Label" String="Changed By"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

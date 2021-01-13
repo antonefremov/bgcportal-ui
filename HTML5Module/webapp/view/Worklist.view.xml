@@ -1,0 +1,147 @@
+<mvc:View
+	controllerName="ns.HTML5Module.controller.Worklist"
+    	height="100%"
+    	xmlns:mvc="sap.ui.core.mvc"
+		xmlns:core="sap.ui.core"
+		xmlns:layout="sap.ui.layout"
+		xmlns="sap.m"
+		xmlns:f="sap.f"
+		xmlns:fb="sap.ui.comp.filterbar"
+		xmlns:vm="sap.ui.comp.variants">
+		<f:DynamicPage id="dynamicPageId" headerExpanded="true">
+			<!-- DynamicPage Title -->
+			 <f:title>
+				<f:DynamicPageTitle>
+					<f:heading>
+						<Label text="{i18n>worklistTableTitleCount}"/>						
+					</f:heading>
+					<f:actions>
+						<ToolbarSpacer/>
+						<Button
+								text="Filter Events"
+								type="Transparent"/>
+						<Button
+								text="My Events"
+								type="Transparent"
+								press=""/>
+						<Button
+								text="Add"
+								type="Transparent"/>
+                        <Button
+								text="View"
+								type="Transparent"/>
+					</f:actions>
+				</f:DynamicPageTitle> 
+			 </f:title> 
+			<!-- DynamicPage Header -->
+			<f:header>
+				<f:DynamicPageHeader pinnable="true">
+					<f:content>
+                    	<fb:FilterBar id="filterBar"
+		                reset="onReset" search="onSearch" clear="onClear" cancel="onCancel" 
+		                filtersDialogClosed = "onFiltersDialogClosed"
+		                showRestoreButton="true" showClearButton="true">
+			
+			            <fb:filterGroupItems>
+                            <fb:FilterGroupItem groupName="__$INTERNAL$" name="name" label="{i18n>name}" partOfCurrentVariant="true" visibleInFilterBar="true">
+                                <fb:control>
+                                        <MultiComboBox
+                                        selectionChange="handleSelectionChange"
+                                        selectionFinish="handleSelectionFinish"
+                                        items="{
+                                                    path: '/MyRequests'
+                                                }">
+										<core:Item key="{ID}" text="{firstName} {lastName}"/>
+                                        </MultiComboBox>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem groupName="__$INTERNAL$" name="category" label="{i18n>category}" labelTooltip="Tooltip Example" visibleInFilterBar="true">
+                                <fb:control>
+                                        <MultiComboBox
+                                        selectionChange="handleSelectionChange"
+                                        selectionFinish="handleSelectionFinish"
+                                        items="{
+                                                    path: '/MyRequests'
+                                                 }">
+										<core:Item key="{categoryID}" text="{categoryDesc}"/>
+                                        </MultiComboBox>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+
+                            <fb:FilterGroupItem groupName="__$INTERNAL$"  name="status" label="{i18n>status}" visibleInFilterBar="true">
+                                <fb:control>
+                                        <MultiComboBox
+                                        selectionChange="handleSelectionChange"
+                                        selectionFinish="handleSelectionFinish"
+                                       items="{
+                                                    path: '/MyRequests'
+                                                }">
+										<core:Item key="{statusID}" text="{statusDesc}"/>
+                                        </MultiComboBox>
+                                    </fb:control>				
+                                </fb:FilterGroupItem>								
+                            </fb:filterGroupItems>									
+	                   </fb:FilterBar>		
+					</f:content>
+				</f:DynamicPageHeader>
+			</f:header>
+
+			<!-- DynamicPage Content -->
+			<f:content>
+			<Table
+				id="table"
+				width="auto"
+				items="{
+					path: '/MyRequests',
+					sorter: {
+						path: 'ID',
+						descending: false
+					}
+				}"
+				noDataText="{worklistView>/tableNoDataText}"
+				growing="true"
+				growingScrollToLoad="true"
+				updateFinished=".onUpdateFinished">
+
+				<columns>
+                    <Column id="photoColumn" width="5%">
+						<Text text="" id="photoColumnTitle"/>
+					</Column>
+					<Column id="nameColumn">
+						<Text text="{i18n>name}" id="nameColumnTitle"/>
+					</Column>
+					<Column id="categoryColumn">
+						<Text text="{i18n>category}" id="categoryColumnTitle"/>
+					</Column>
+                    <Column id="dateTimeColumn">
+						<Text text="{i18n>dateTime}" id="dateTimeColumntTitle"/>
+					</Column>
+                    <Column id="statusColumn" width="10%">
+						<Text text="{i18n>status}" id="statusColumnTitle"/>
+					</Column>
+                    <Column id="assignColumn" hAlign="Center">
+						<Text text="" id="assignColumnTitle"/>
+					</Column>
+				</columns>
+
+				<items>
+					<ColumnListItem
+						type="Navigation"
+						press=".onPress">
+						<cells>
+                            <Button icon="sap-icon://employee" type ="Transparent" enabled="false"/>
+							<ObjectIdentifier
+								title="{firstName} {lastName}"/>
+                            <Text text="{categoryDesc}" />
+                            <Text text="{createdAt} Due by {dueBy}" />
+                            <Text text="{statusDesc}" />
+                            <Button text="Assign to me" type ="Transparent"/>
+							
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+			</f:content>
+		</f:DynamicPage>
+        </mvc:View>
