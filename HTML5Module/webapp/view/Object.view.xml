@@ -81,53 +81,30 @@
                                                 noDataText=""
                                                 growing="true"
                                                 growingScrollToLoad="true"
-                                                updateFinished=".onUpdateFinished">
-                                                  <!-- items="{
-                                                            path: '/EmploymentHistory'
-                                                        }"> -->
+                                                updateFinished="_onUpdateFinished">
                                                 <columns>
                                                     <Column id="nameColumn">
-                                                        <Text text="{i18n>employerName}" id="nameColumnTitle"/>
+                                                        <Text text="Employer Name" id="nameColumnTitle"/>
                                                     </Column>
                                                     <Column id="categoryColumn">
-                                                        <Text text="{i18n>designation}" id="categoryColumnTitle"/>
+                                                        <Text text="Designation" id="categoryColumnTitle"/>
                                                     </Column>
                                                     <Column id="dateTimeColumn">
-                                                        <Text text="{i18n>ctc}" id="dateTimeColumntTitle"/>
+                                                        <Text text="ctc" id="dateTimeColumntTitle"/>
                                                     </Column>
                                                     <Column id="statusColumn" width="10%">
-                                                        <Text text="{i18n>email}" id="statusColumnTitle"/>
+                                                        <Text text="Email" id="statusColumnTitle"/>
                                                     </Column>
                                                     <Column id="assignColumn" hAlign="Center">
-                                                        <Text text="{i18n>phone}" id="assignColumnTitle"/>
+                                                        <Text text="Phone" id="assignColumnTitle"/>
                                                     </Column>
                                                     <Column  hAlign="Center">
-                                                        <Text text="{i18n>Document}"/>
+                                                        <Text text="Document"/>
                                                     </Column>
                                                     <Column hAlign="Center">
-                                                        <Text text="{i18n>BGC Status}"/>
+                                                        <Text text="BGC Status"/>
                                                     </Column>
                                                 </columns>
-
-                                                <items>
-                                                    <ColumnListItem
-                                                        id="idTemplate"
-                                                        type="Navigation"
-                                                        press=".onPress">
-                                                        <cells>
-                                                            <ObjectIdentifier
-                                                                title="{employer}"/>
-                                                            <Text text="{designation}" />
-                                                            <Text text="{ctc}" />
-                                                            <Text text="{email}" />
-                                                            <Text text="{phone}" />
-                                                            <Text text="" />
-                                                            <Text text="" />
-                                                            
-                                                            
-                                                        </cells>
-                                                    </ColumnListItem>
-                                                </items>
                                             </Table>
                                         </Page>
                                         <Page 
@@ -144,9 +121,6 @@
                                                 growing="true"
                                                 growingScrollToLoad="true"
                                                 updateFinished=".onUpdateFinished">
-                                                  <!-- items="{
-                                                            path: '/DrugUseType'
-                                                        }"> -->
                                                 <columns>
                                                     <Column>
                                                         <Text text="Drug Type"/>
@@ -170,27 +144,6 @@
                                                         <Text text="Comments"/>
                                                     </Column>
                                                 </columns>
-
-                                                <items>
-                                                    <ColumnListItem
-                                                        id="idDrugTableTemplate"
-                                                        type="Navigation"
-                                                        press=".onPress"
-                                                       >
-                                                        <cells>
-                                                            <ObjectIdentifier
-                                                                title="{drugType}"/>
-                                                            <Text text="" />
-                                                            <Text text="" />
-                                                            <Text text="" />
-                                                            <Text text="{testResult}" />
-                                                            <Text text="" />
-                                                            <Text text="" />
-                                                            
-                                                            
-                                                        </cells>
-                                                    </ColumnListItem>
-                                                </items>
                                             </Table>
                                         </Page>
                                     </detailPages>
@@ -203,12 +156,10 @@
                                           <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="auto" class="sapUiResponsiveMargin">
 		                                  <content>
                                           <List id="masterPageListID" itemPress="_navToDetailPage"> 
-                                            </List>
-                                         
+                                            </List>                                         
                                             </content>
                                             </Panel>
-                                        </Page>
-                                    
+                                        </Page>                                    
                                     </masterPages>
                                 </SplitContainer>
 							</uxap:blocks>

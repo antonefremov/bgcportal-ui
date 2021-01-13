@@ -1,3 +1,4 @@
+// @ts-nocheck
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
@@ -79,10 +80,10 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) {
-			var sObjectId =  oEvent.getParameter("arguments").objectId;
-            this._bindView("/MyRequests" + sObjectId);
-           this._bindMasterList(sObjectId);
-           this._bindEmploymentHistoryTable(sObjectId);
+			this.sObjectId =  oEvent.getParameter("arguments").objectId;
+            this._bindView("/MyRequests" + this.sObjectId);
+           this._bindMasterList();
+           this._bindEmploymentHistoryTable();
            
 		},
 
@@ -117,17 +118,19 @@ sap.ui.define([
 		 */
         _bindMasterList: function(sObjectId){
            var list = this.getView().byId("masterPageListID"),
+         
            oItemTemplate = new sap.m.StandardListItem({
-                    title:"{screeningTaskTypeDescription}",
+                   title:"{screeningTaskTypeDescription}",
+                    description:"{screeningTaskTypeName}",
                     counter:"{completion}",
                     type : "Navigation"
-                   // press: this._navToDetailPage
-				});
+                });
+                
            list.bindItems({
                path:"/MyScreeningTask",
                template: oItemTemplate,
                parameters: {
-					$filter: "candidateID eq " + sObjectId
+					$filter: "candidateID eq " +  this.sObjectId
 				}
            })
         },
@@ -148,26 +151,51 @@ sap.ui.define([
             }
         },
        
-        _bindEmploymentHistoryTable: function(sObjectId){
-           var oTable = this.getView().byId("idEmployementHistoryTable");      
+        _bindEmploymentHistoryTable: function(){
+          
+           var oTable = this.getView().byId("idEmployementHistoryTable");           
                 oTable.bindItems({
-                    path:"/EmploymentHistory",
-                    template: this.getView().byId("idTemplate"), 
-                    // parameters: {
-                    //       $filter: "ID eq " + sObjectId
-                    // }
-                });
+                     path:"/EmploymentHistory",
+                     template: new sap.m.ColumnListItem({
+						  cells:[             
+                                new sap.m.ObjectIdentifier({title:"{employer}"}),
+                                new sap.m.Text({text:"{designation}"}),
+                                new sap.m.Text({text:"{ctc}"}),
+                                new sap.m.Text({text:"{email}"}),
+                                new sap.m.Text({text:"{phone}"}),
+                                new sap.m.Text({text:""}),                              
+                                new sap.m.Text({text:""})
+							 ]
+						  }),
+                     templateShareable: true,
+                     parameters: {
+                      $filter: "screeningTask_ID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
+                                                                         //and not screening task as I am passing candidate id as value
+                    }
+                 });
             
         },
-
+        
         _bindDrugUseTestTable: function(){
                 var oTable = this.getView().byId("idDrugUseTestTable");      
                 oTable.bindItems({
                     path:"/DrugUseType",
-                    template: this.getView().byId("idDrugTableTemplate"), 
-                    // parameters: {
-                    //       $filter: "ID eq " + sObjectId
-                    // }
+                    template: new sap.m.ColumnListItem({
+						  cells:[             
+                                new sap.m.ObjectIdentifier({title:"{drugType}"}),
+                                new sap.m.Text({text:""}),
+                                new sap.m.Text({text:""}),
+                                new sap.m.Text({text:""}),
+                                new sap.m.Text({text:"{testResult}"}),
+                                new sap.m.Text({text:""}),
+                                new sap.m.Text({text:""})
+							 ]
+						  }),
+                    templateShareable: true,
+                     parameters: {
+                           $filter: "screeningTask_ID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
+                                                                             //and not screening task as I am passing candidate id as value
+                     }
                 });
         },
 
