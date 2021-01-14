@@ -90,16 +90,16 @@
                                                         <Text text="Designation" id="categoryColumnTitle"/>
                                                     </Column>
                                                     <Column id="dateTimeColumn">
-                                                        <Text text="ctc" id="dateTimeColumntTitle"/>
+                                                        <Text text="CTC" id="dateTimeColumntTitle"/>
                                                     </Column>
                                                     <Column id="statusColumn" width="10%">
-                                                        <Text text="Email" id="statusColumnTitle"/>
+                                                        <Text text="Employer Email" id="statusColumnTitle"/>
                                                     </Column>
                                                     <Column id="assignColumn" hAlign="Center">
-                                                        <Text text="Phone" id="assignColumnTitle"/>
+                                                        <Text text="Employer Phone No." id="assignColumnTitle"/>
                                                     </Column>
                                                     <Column  hAlign="Center">
-                                                        <Text text="Document"/>
+                                                        <Text text="Documents"/>
                                                     </Column>
                                                     <Column hAlign="Center">
                                                         <Text text="BGC Status"/>
@@ -138,10 +138,10 @@
                                                         <Text text="Test Results" />
                                                     </Column>
                                                     <Column  hAlign="Center">
-                                                        <Text text="Amount Deducted"/>
+                                                        <Text text="Amount Detected"/>
                                                     </Column>
                                                     <Column hAlign="Center">
-                                                        <Text text="Comments"/>
+                                                        <Text text="Comment"/>
                                                     </Column>
                                                 </columns>
                                             </Table>

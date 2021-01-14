@@ -182,18 +182,18 @@ sap.ui.define([
                     path:"/DrugUseType",
                     template: new sap.m.ColumnListItem({
 						  cells:[             
-                                new sap.m.ObjectIdentifier({title:"{drugType}"}),
-                                new sap.m.Text({text:""}),
-                                new sap.m.Text({text:""}),
-                                new sap.m.Text({text:""}),
+                                new sap.m.ObjectIdentifier({title:"{drugTypeDescription}"}),
+                                new sap.m.Text({text:"{testRequirement}"}),
+                                new sap.m.Text({text:"{permissibleLimit}"}),
+                                new sap.m.Text({text:"{testDate}"}),
                                 new sap.m.Text({text:"{testResult}"}),
-                                new sap.m.Text({text:""}),
-                                new sap.m.Text({text:""})
+                                new sap.m.Text({text:"{amountDetected}"}),
+                                new sap.m.Text({text:"{comment}"})
 							 ]
 						  }),
                     templateShareable: true,
                      parameters: {
-                           $filter: "screeningTask_ID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
+                           $filter: "screeningTaskID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
                                                                              //and not screening task as I am passing candidate id as value
                      }
                 });
