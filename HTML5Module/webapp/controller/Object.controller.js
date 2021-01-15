@@ -30,6 +30,8 @@ sap.ui.define([
 				});
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "objectView");
+            // this._pdfViewer = new sap.m.PDFViewer();;
+			// this.getView().addDependent(this._pdfViewer);
 		},
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -80,10 +82,11 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched : function (oEvent) {
-			this.sObjectId =  oEvent.getParameter("arguments").objectId;
-            this._bindView("/MyRequests" + this.sObjectId);
-           this._bindMasterList();
-           this._bindEmploymentHistoryTable();
+            this.objectId =  oEvent.getParameter("arguments").objectId;
+            this.screeningTaskId =  oEvent.getParameter("arguments").screeningTaskId; 
+            this._bindView("/MyRequests" + this.objectId);
+            this._bindMasterList();
+            this._bindEmploymentHistoryTable(this.screeningTaskId);
            
 		},
 
@@ -116,29 +119,69 @@ sap.ui.define([
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-        _bindMasterList: function(sObjectId){
+        _bindMasterList: function(){
            var list = this.getView().byId("masterPageListID"),
          
-           oItemTemplate = new sap.m.StandardListItem({
-                   title:"{screeningTaskTypeDescription}",
-                    description:"{screeningTaskTypeName}",
-                    counter:"{completion}",
-                    type : "Navigation"
-                });
+        //    oItemTemplate = new sap.m.StandardListItem({
+        //            title:"{screeningTaskTypeDescription}",
+        //             description:"{screeningTaskTypeName}",
+        //             counter:"{completion}",
+        //             type : "Navigation"
+        //         });
+
+        //changing StandardListItem item to CustomListItem to include microchart
+             oItemTemplate = new sap.m.CustomListItem({
+                           type: sap.m.ListType.Active,
+						   content:[     
+                               new sap.m.HBox({ items:[
+                                    new sap.ui.core.Icon({
+                                                size:"2rem",
+                                                src:"sap-icon://attachment-photo",
+                                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
+                                     new sap.m.VBox({items:[
+                                                 new sap.m.Title({
+                                                         text: "{screeningTaskTypeDescription}"
+                                                             }),
+                                                 new sap.m.Label({
+                                                         text: "{screeningTaskTypeName}"
+                                                             })]
+                                                 }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom")
+                               
+                                    ]})
+                        
+                                        // code to add radial chart to show completion(like mockup) in the list
+                                        // but somehow it does not take sap.suite as a valid library!
+
+                                        // new sap.m.VBox({vertical:true, items:[
+                                            // new sap.suite.ui.microchart.RadialMicroChart({
+                                            //     size:"S",
+                                            //     percentage:"{completion}", 
+                                            //     valueColor:"Error",
+                                            //     class:"sapUiSmallMargin"
+                                            // })
+                                        // ]
+										// })
+                                            ]
+                       })
+            // create a CustomData template, set its key to "answer" and bind its value to the answer data
+			//var oDataTemplate = new sap.ui.core.CustomData({key:"screeningId", value: "{ID}"});
+
+			// add the CustomData template to the item template
+			//oItemTemplate.addCustomData(oDataTemplate);
                 
            list.bindItems({
                path:"/MyScreeningTask",
                template: oItemTemplate,
                parameters: {
-					$filter: "candidateID eq " +  this.sObjectId
+					$filter: "candidateID eq " +  this.objectId
 				}
            })
         },
 
         _navToDetailPage: function(oEvent){
             var splitApp =  this.getView().byId("SplitContDemo");
-          
-            var sListItemtitle = oEvent.getParameters().listItem.getTitle()
+            //var screeningTaskId = oEvent.getParameters().listItem.getBindingContext().getProperty("ID");
+            var sListItemtitle = oEvent.getParameters().listItem.getBindingContext().getProperty("screeningTaskTypeDescription");
             switch(sListItemtitle){
             case "Employment History":
                   splitApp.toDetail(this.createId("EmploymentHistorydetailPage"));
@@ -152,7 +195,7 @@ sap.ui.define([
         },
        
         _bindEmploymentHistoryTable: function(){
-          
+          var oThis=this;
            var oTable = this.getView().byId("idEmployementHistoryTable");           
                 oTable.bindItems({
                      path:"/EmploymentHistory",
@@ -163,17 +206,18 @@ sap.ui.define([
                                 new sap.m.Text({text:"{ctc}"}),
                                 new sap.m.Text({text:"{email}"}),
                                 new sap.m.Text({text:"{phone}"}),
-                                new sap.m.Text({text:""}),                              
-                                new sap.m.Text({text:""})
+                                new sap.m.Button({text:"1", icon:"sap-icon://show", press: oThis._showDocument}),                              
+                                new sap.m.Text({text:"Pending"}),
+                                new sap.m.Button({icon:"sap-icon://accept"}),
+                                new sap.m.Button({icon:"sap-icon://decline"}),
+                                new sap.m.Text({text:"{screeningTask_ID}"})                               
 							 ]
 						  }),
                      templateShareable: true,
                      parameters: {
-                      $filter: "screeningTask_ID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
-                                                                         //and not screening task as I am passing candidate id as value
+                      $filter: "screeningTask_ID eq " +  this.screeningTaskId
                     }
-                 });
-            
+                 });            
         },
         
         _bindDrugUseTestTable: function(){
@@ -193,10 +237,28 @@ sap.ui.define([
 						  }),
                     templateShareable: true,
                      parameters: {
-                           $filter: "screeningTaskID eq " +  this.sObjectId //to-do : change data model to take candidate id as filter 
-                                                                             //and not screening task as I am passing candidate id as value
+                           $filter: "screeningTaskID eq " +  this.screeningTaskId
                      }
                 });
+        },
+
+        _showDocument: function(oEvent){	
+			var opdfViewer = new sap.m.PDFViewer();
+            //this.getView().addDependent(opdfViewer);
+            var sServiceURL =  oEvent.getSource().getModel().sServiceUrl;
+            var screeningTaskId = oEvent.getSource().getBindingContext().getProperty("screeningTask_ID");
+
+            //in the below commented line, url is hardcoded and it does download something directy I guess the pdf type
+            //format is problem. But when I try filtering document by screeningtask id, without adding "/content" it gives me 2 objects 
+            //but can't see anything like "content". after adding "/content" it gives 400 error.
+            // need to check how to pass the id and then content so that it makes url like hardcoded line here
+            
+           // var sSource = sServiceURL + "Documents(31d09ec3-e69b-4b78-84f7-520a61c6bc38)/content";
+            var sSource = sServiceURL + "Documents?$filter=screeningTask_ID eq "+ screeningTaskId +"/content";
+
+			opdfViewer.setSource(sSource);
+			opdfViewer.setTitle("PDF file");
+			opdfViewer.open();			
         },
 
 		_onBindingChange : function () {

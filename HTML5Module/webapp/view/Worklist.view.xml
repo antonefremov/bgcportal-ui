@@ -123,6 +123,9 @@
                     <Column id="assignColumn" hAlign="Center">
 						<Text text="" id="assignColumnTitle"/>
 					</Column>
+                    <Column hAlign="Center" width="0%" visible="false">
+						<Text text="" />
+					</Column>
 				</columns>
 
 				<items>
@@ -137,7 +140,7 @@
                             <Text text="{createdAt} Due by {dueBy}" />
                             <Text text="{statusDesc}" />
                             <Button text="Assign to me" type ="Transparent"/>
-							
+							<Text text="{screeningTaskID}" />
 						</cells>
 					</ColumnListItem>
 				</items>

@@ -102,7 +102,7 @@
           ]
         },
         {
-          "pattern": "Request{objectId}",
+          "pattern": "Request/{objectId},{screeningTaskId}",
           "name": "object",
           "target": [
             "object"
