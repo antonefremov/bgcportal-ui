@@ -246,15 +246,15 @@ sap.ui.define([
 			var opdfViewer = new sap.m.PDFViewer();
             //this.getView().addDependent(opdfViewer);
             var sServiceURL =  oEvent.getSource().getModel().sServiceUrl;
-            var screeningTaskId = oEvent.getSource().getBindingContext().getProperty("screeningTask_ID");
+            // var screeningTaskId = oEvent.getSource().getBindingContext().getProperty("screeningTask_ID");
 
             //in the below commented line, url is hardcoded and it does download something directy I guess the pdf type
             //format is problem. But when I try filtering document by screeningtask id, without adding "/content" it gives me 2 objects 
             //but can't see anything like "content". after adding "/content" it gives 400 error.
             // need to check how to pass the id and then content so that it makes url like hardcoded line here
             
-           // var sSource = sServiceURL + "Documents(31d09ec3-e69b-4b78-84f7-520a61c6bc38)/content";
-            var sSource = sServiceURL + "Documents?$filter=screeningTask_ID eq "+ screeningTaskId +"/content";
+            var sSource = sServiceURL + "Documents(969ced7a-0e6f-46df-8348-e4181550e8c8)/content";
+            // var sSource = sServiceURL + "Documents?$filter=screeningTask_ID eq "+ screeningTaskId +"/content";
 
 			opdfViewer.setSource(sSource);
 			opdfViewer.setTitle("PDF file");
