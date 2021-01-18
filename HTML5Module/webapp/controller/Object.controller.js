@@ -83,10 +83,14 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
             this.objectId =  oEvent.getParameter("arguments").objectId;
-            this.screeningTaskId =  oEvent.getParameter("arguments").screeningTaskId; 
+            //this.screeningTaskId =  oEvent.getParameter("arguments").screeningTaskId; 
             this._bindView("/MyRequests" + this.objectId);
             this._bindMasterList();
-            this._bindEmploymentHistoryTable(this.screeningTaskId);
+            //destroying content of table everytime we enter for new candidate to get fresh data
+            this.getView().byId("idEmployementHistoryTable").destroyItems();  
+            this.getView().byId("idDrugUseTestTable").destroyItems(); 
+            
+            //this._bindEmploymentHistoryTable(this.screeningTaskId);
            
 		},
 
@@ -121,13 +125,6 @@ sap.ui.define([
 		 */
         _bindMasterList: function(){
            var list = this.getView().byId("masterPageListID"),
-         
-        //    oItemTemplate = new sap.m.StandardListItem({
-        //            title:"{screeningTaskTypeDescription}",
-        //             description:"{screeningTaskTypeName}",
-        //             counter:"{completion}",
-        //             type : "Navigation"
-        //         });
 
         //changing StandardListItem item to CustomListItem to include microchart
              oItemTemplate = new sap.m.CustomListItem({
@@ -164,10 +161,10 @@ sap.ui.define([
                                             ]
                        })
             // create a CustomData template, set its key to "answer" and bind its value to the answer data
-			//var oDataTemplate = new sap.ui.core.CustomData({key:"screeningId", value: "{ID}"});
+			var oDataTemplate = new sap.ui.core.CustomData({key:"screeningId", value: "{ID}"});
 
 			// add the CustomData template to the item template
-			//oItemTemplate.addCustomData(oDataTemplate);
+			oItemTemplate.addCustomData(oDataTemplate);
                 
            list.bindItems({
                path:"/MyScreeningTask",
@@ -180,25 +177,27 @@ sap.ui.define([
 
         _navToDetailPage: function(oEvent){
             var splitApp =  this.getView().byId("SplitContDemo");
-            //var screeningTaskId = oEvent.getParameters().listItem.getBindingContext().getProperty("ID");
+            var screeningTaskId = oEvent.getParameters().listItem.getBindingContext().getProperty("ID");
             var sListItemtitle = oEvent.getParameters().listItem.getBindingContext().getProperty("screeningTaskTypeDescription");
             switch(sListItemtitle){
             case "Employment History":
                   splitApp.toDetail(this.createId("EmploymentHistorydetailPage"));
-                  this._bindEmploymentHistoryTable();
+                  this._bindEmploymentHistoryTable(screeningTaskId);
                   break;
             case "Drug Use Test":
                   splitApp.toDetail(this.createId("DrugUseTestDetailPage"));
-                  this._bindDrugUseTestTable();
+                  this._bindDrugUseTestTable(screeningTaskId);
                   break;
             }
         },
        
-        _bindEmploymentHistoryTable: function(){
+        _bindEmploymentHistoryTable: function(screeningTaskId){
           var oThis=this;
            var oTable = this.getView().byId("idEmployementHistoryTable");           
                 oTable.bindItems({
-                     path:"/EmploymentHistory",
+                    //tried binding with EmploymentHistory entity for property update since view does not support update
+                    //change the code back to view binding to try post request approach
+                     path:"/EmploymentHistoryType", 
                      template: new sap.m.ColumnListItem({
 						  cells:[             
                                 new sap.m.ObjectIdentifier({title:"{employer}"}),
@@ -207,20 +206,25 @@ sap.ui.define([
                                 new sap.m.Text({text:"{email}"}),
                                 new sap.m.Text({text:"{phone}"}),
                                 new sap.m.Button({text:"1", icon:"sap-icon://show", press: oThis._showDocument}),                              
-                                new sap.m.Text({text:"Pending"}),
-                                new sap.m.Button({icon:"sap-icon://accept"}),
+                                new sap.m.Text({text:"{statusDesc}"}),
+                                new sap.m.Button({icon:"sap-icon://accept", press: oThis._acceptEmploymentHistory}),
                                 new sap.m.Button({icon:"sap-icon://decline"}),
-                                new sap.m.Text({text:"{screeningTask_ID}"})                               
+                                // new sap.m.Text({text:"{employmentConfirmation}"}),
+                                // new sap.m.Text({text:"{ctcConfirmation}"}),  
+                                // new sap.m.Text({text:"{documentsVerified}"}),                                 
+                                // new sap.m.Text({text:"{conductDesc}"}),  
+                                // new sap.m.Text({text:"{comments}"})  
+
 							 ]
 						  }),
                      templateShareable: true,
                      parameters: {
-                      $filter: "screeningTask_ID eq " +  this.screeningTaskId
+                      $filter: "screeningTaskID eq " +  screeningTaskId
                     }
                  });            
         },
         
-        _bindDrugUseTestTable: function(){
+        _bindDrugUseTestTable: function(screeningTaskId){
                 var oTable = this.getView().byId("idDrugUseTestTable");      
                 oTable.bindItems({
                     path:"/DrugUseType",
@@ -237,7 +241,7 @@ sap.ui.define([
 						  }),
                     templateShareable: true,
                      parameters: {
-                           $filter: "screeningTaskID eq " +  this.screeningTaskId
+                           $filter: "screeningTaskID eq " +  screeningTaskId
                      }
                 });
         },
@@ -253,7 +257,7 @@ sap.ui.define([
             //but can't see anything like "content". after adding "/content" it gives 400 error.
             // need to check how to pass the id and then content so that it makes url like hardcoded line here
             
-            var sSource = sServiceURL + "Documents(969ced7a-0e6f-46df-8348-e4181550e8c8)/content";
+            var sSource = sServiceURL + "Documents(c657194e-7632-473c-bd03-145cd74aa0e1)/content";
             // var sSource = sServiceURL + "Documents?$filter=screeningTask_ID eq "+ screeningTaskId +"/content";
 
 			opdfViewer.setSource(sSource);
@@ -261,6 +265,129 @@ sap.ui.define([
 			opdfViewer.open();			
         },
 
+        _acceptEmploymentHistory: function(oEvent){
+            
+            var currentEmployer= oEvent.getSource().getBindingContext().getProperty("employer");
+             this.currentBinding= oEvent.getSource().getBindingContext().getBinding();
+			if (!this.oConfirmDialog) {
+                
+				this.oConfirmDialog = new sap.m.Dialog({
+					type: sap.m.DialogType.Message,
+					title: "Employment Confirmation - " + currentEmployer,
+					content: [
+						new sap.ui.layout.VerticalLayout({
+                            width: "400px",
+							content: [
+                                        new sap.ui.layout.HorizontalLayout({
+									   content: [
+                                        new sap.m.Text({ text: "Employment Confirmation: " }).addStyleClass("sapUiSmallMargin"),
+                                        new sap.m.Switch("empConfirmSwitch",{ type:"AcceptReject", state:"{employmentConfirmation}" }),
+                                       ]}),
+
+                                        new sap.ui.layout.HorizontalLayout({
+									   content: [
+                                        new sap.m.Text({ text: "CTC Confirmation: " }).addStyleClass("sapUiSmallMargin"),
+                                        new sap.m.Switch("ctcConfirmationSwitch",{ type:"AcceptReject", state:"{ctcConfirmation}" }),
+                                       ]}),
+
+                                        new sap.ui.layout.HorizontalLayout({
+									   content: [
+                                        new sap.m.Text({ text: "Documents Verified: " }).addStyleClass("sapUiSmallMargin"),
+                                        new sap.m.Switch("documentsVerifiedSwitch",{ type:"AcceptReject", state:"{documentsVerified}"}),
+                                       ]}),
+
+                                        new sap.ui.layout.HorizontalLayout({
+									   content: [
+                                           
+                                        new sap.m.Text({ text: "Conduct: " }).addStyleClass("sapUiSmallMargin"),
+                                        new sap.m.ComboBox("conductComboBox",{ selectedKey:"{conductID}" ,items:[ 
+                                                            new sap.ui.core.Item({key:"AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA" ,text : "Very Good"}),
+                                                            new sap.ui.core.Item({text : "Good"}),
+                                                            new sap.ui.core.Item({text : "Questionable"}),
+                                                            new sap.ui.core.Item({text : "Inappropriate"})
+                                                                   ]
+                                                            })
+                                                        
+                                        ]}),
+
+                                        new sap.ui.layout.HorizontalLayout({
+									   content: [
+                                        new sap.m.Text({ text: "Comments: "}).addStyleClass("sapUiSmallMargin"),
+                                        new sap.m.TextArea("commentsText",{
+                                            width: "100%",
+                                            placeholder: "Add note (optional)",
+                                            value:"{comments}"
+                                        })
+                                    ]})
+							]
+						}),
+					],
+					beginButton: new sap.m.Button({
+						type: sap.m.ButtonType.Emphasized,
+						text: "Save",
+						press: function (oEvent) {
+                           // this.oConfirmDialog.setBindingContext(this.getEventingParent().getBindingContext());
+                            var currentEmployerId = this.getEventingParent().getBindingContext().getProperty("ID");
+                             var empConfirmSwitch = sap.ui.getCore().byId("empConfirmSwitch").getState();
+                             var ctcConfirmationSwitch = sap.ui.getCore().byId("ctcConfirmationSwitch").getState();
+                             var documentsVerifiedSwitch=sap.ui.getCore().byId("documentsVerifiedSwitch").getState();
+                             var conductComboBox=sap.ui.getCore().byId("conductComboBox").getSelectedKey();
+                             var commentsText = sap.ui.getCore().byId("commentsText").getValue();
+                           
+                             //set property should update the service directy without a post call
+                             //this approach is working if we have all the columns in employment history table itself but
+                             //in our case we have a popup over it and somehow it's not working, need to reasearch more about this approach
+
+                            // this.getEventingParent().getBindingContext().setProperty("employmentConfirmation", empConfirmSwitch);
+                            // this.getEventingParent().getBindingContext().setProperty("ctcConfirmation", ctcConfirmationSwitch);
+                            // this.getEventingParent().getBindingContext().setProperty("documentsVerified", documentsVerifiedSwitch);
+                            //this.getEventingParent().getBindingContext().setProperty("conductID", conductComboBox);
+                            // this.getEventingParent().getBindingContext().setProperty("comments", commentsText);
+                            
+                            jQuery.ajax({
+                                type : 'POST',
+                                contentType: 'application/json',
+                                url: "/nsHTML5Module/bgcportal/api/v1/confirmEmploymentHistory",
+                                data: ({
+                                          "ID": currentEmployerId ,
+                                          "employmentConfirmation": empConfirmSwitch, 
+                                          "ctcConfirmation": ctcConfirmationSwitch,
+                                          "documentsVerified": documentsVerifiedSwitch,
+                                          "conductID": conductComboBox ,
+                                          "comments": commentsText
+
+                                                                            
+                                        //  "ID": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC",
+                                        //  "employmentConfirmation": true, 
+                                        //  "ctcConfirmation": true,
+                                        //  "documentsVerified": true,
+                                        //  "conductID": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB",
+                                        //  "comments": "New comments"
+                                    
+                                }),
+                                success: function(data) {
+                                },
+                                error: function(e){
+                                        console.log("error: "+e);
+                                    } 
+                            });                       
+                            
+                            this.oConfirmDialog.close();
+						}.bind(this)
+					}),
+					endButton: new sap.m.Button({
+						text: "Cancel",
+						press: function () {
+							this.oConfirmDialog.close();
+						}.bind(this)
+					})
+                });
+            }
+            //setting the binding context for set property approach
+            //this.oConfirmDialog.setBindingContext(this.getEventingParent().getBindingContext());
+			this.oConfirmDialog.open();
+		
+        },
 		_onBindingChange : function () {
 			var oView = this.getView(),
 				oViewModel = this.getModel("objectView"),

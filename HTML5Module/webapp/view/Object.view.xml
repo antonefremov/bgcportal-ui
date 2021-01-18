@@ -24,7 +24,7 @@
 				    </uxap:snappedContent>
 
                     <uxap:actions>
-				    <Button text="Approve BGC" press="aprroveBGC"/>
+				    <Button text="Approve BGC" press="aprroveBGC" type="Emphasized"/>
 					<Button text="Reject" press="rejectBGC"/>
 				   </uxap:actions>
 
@@ -116,9 +116,21 @@
                                                      <Column hAlign="Center" id="idDisapproveColumn" width="6%">
                                                         <Text text=""/>
                                                     </Column>
-                                                     <Column hAlign="Center" visible="false" width="0%">
+                                                    <!-- <Column hAlign="Center" visible="true" >
                                                         <Text text=""/>
-                                                    </Column>
+                                                    </Column> 
+                                                    <Column hAlign="Center" visible="false" width="0%">
+                                                        <Text text=""/>
+                                                    </Column> 
+                                                    <Column hAlign="Center" visible="false" width="0%">
+                                                        <Text text=""/>
+                                                    </Column> 
+                                                    <Column hAlign="Center" visible="false" width="0%">
+                                                        <Text text=""/>
+                                                    </Column> 
+                                                    <Column hAlign="Center" visible="false" width="0%">
+                                                        <Text text=""/>
+                                                    </Column>  -->
                                                 </columns>
                                             </Table>
                                         </Page>
