@@ -30,6 +30,7 @@ sap.ui.define([
 				});
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "objectView");
+            this.oController = this;
             // this._pdfViewer = new sap.m.PDFViewer();;
 			// this.getView().addDependent(this._pdfViewer);
 		},
@@ -207,8 +208,8 @@ sap.ui.define([
                                 new sap.m.Text({text:"{phone}"}),
                                 new sap.m.Button({text:"1", icon:"sap-icon://show", press: oThis._showDocument}),                              
                                 new sap.m.Text({text:"{statusDesc}"}),
-                                new sap.m.Button({icon:"sap-icon://accept", press: oThis._acceptEmploymentHistory}),
-                                new sap.m.Button({icon:"sap-icon://decline"}),
+                                new sap.m.Button({icon:"sap-icon://accept", press: oThis._acceptEmploymentHistory.bind(oThis) }),
+                                new sap.m.Button({icon:"sap-icon://decline",press: oThis._acceptEmploymentHistory.bind(oThis) }),
                                 // new sap.m.Text({text:"{employmentConfirmation}"}),
                                 // new sap.m.Text({text:"{ctcConfirmation}"}),  
                                 // new sap.m.Text({text:"{documentsVerified}"}),                                 
@@ -266,13 +267,14 @@ sap.ui.define([
         },
 
         _acceptEmploymentHistory: function(oEvent){
-            
+            this.currentEmployerId =oEvent.getSource().getBindingContext().getProperty("ID");
             var currentEmployer= oEvent.getSource().getBindingContext().getProperty("employer");
              this.currentBinding= oEvent.getSource().getBindingContext().getBinding();
 			if (!this.oConfirmDialog) {
                 
 				this.oConfirmDialog = new sap.m.Dialog({
-					type: sap.m.DialogType.Message,
+                    type: sap.m.DialogType.Message,
+                    //afterClose: this.afterCloseDialog,
 					title: "Employment Confirmation - " + currentEmployer,
 					content: [
 						new sap.ui.layout.VerticalLayout({
@@ -327,7 +329,7 @@ sap.ui.define([
 						text: "Save",
 						press: function (oEvent) {
                            // this.oConfirmDialog.setBindingContext(this.getEventingParent().getBindingContext());
-                            var currentEmployerId = this.getEventingParent().getBindingContext().getProperty("ID");
+                            //var currentEmployerId = this.getEventingParent().getBindingContext().getProperty("ID");
                              var empConfirmSwitch = sap.ui.getCore().byId("empConfirmSwitch").getState();
                              var ctcConfirmationSwitch = sap.ui.getCore().byId("ctcConfirmationSwitch").getState();
                              var documentsVerifiedSwitch=sap.ui.getCore().byId("documentsVerifiedSwitch").getState();
@@ -349,7 +351,7 @@ sap.ui.define([
                                 contentType: 'application/json',
                                 url: "/nsHTML5Module/bgcportal/api/v1/confirmEmploymentHistory",
                                 data: ({
-                                          "ID": currentEmployerId ,
+                                          "ID": this.currentEmployerId ,
                                           "employmentConfirmation": empConfirmSwitch, 
                                           "ctcConfirmation": ctcConfirmationSwitch,
                                           "documentsVerified": documentsVerifiedSwitch,
@@ -385,8 +387,11 @@ sap.ui.define([
             }
             //setting the binding context for set property approach
             //this.oConfirmDialog.setBindingContext(this.getEventingParent().getBindingContext());
-			this.oConfirmDialog.open();
+            this.oConfirmDialog.open();
 		
+        },
+        afterCloseDialog: function(oEvent){
+                oEvent.getSource().getParent().destroy();
         },
 		_onBindingChange : function () {
 			var oView = this.getView(),
