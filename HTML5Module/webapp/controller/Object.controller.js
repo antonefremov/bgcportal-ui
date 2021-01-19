@@ -241,6 +241,7 @@ sap.ui.define([
 
         // NOTE : with every interaction/change in UI patch call is triggered automatically and
         // updates the service. So, there is actually no use of save button functionality in this screnario
+        //or need to change code to a bit to call only on save by using local model 
         onSavePress: function(oEvent){
             var oThis=this;
             var oBindingContextDialog= oEvent.getSource().getBindingContext();
