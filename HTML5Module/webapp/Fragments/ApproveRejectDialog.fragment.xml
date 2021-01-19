@@ -1,0 +1,43 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core">
+	<Dialog title="Employment Confirmation" class="dialogStyle">
+	<content>
+        <l:VerticalLayout>
+            <l:HorizontalLayout> 
+                <Text text="Employment Confirmation: " class="sapUiSmallMargin"/>
+                <Switch id="empConfirmSwitch" state="{employmentConfirmation}" type="AcceptReject"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="CTC Confirmation: " class="sapUiSmallMargin"/>
+                <Switch id="ctcConfirmationSwitch" state="{ctcConfirmation}" type="AcceptReject"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Documents Verified: " class="sapUiSmallMargin"/>
+                <Switch id="documentsVerifiedSwitch" state="{documentsVerified}" type="AcceptReject"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Conduct: " class="sapUiSmallMargin"/>
+                <ComboBox id="conductComboBox" selectedKey="{conductID}">
+                    <items>
+                        <core:Item key="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA" text="Very Good" />
+                        <core:Item key="GoodKey" text="Good" />
+                        <core:Item key="QuestionableKey" text="Questionable" />
+                        <core:Item key="InappropriateKey" text="Inappropriate" />
+                    </items>
+                </ComboBox>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Comments: " class="sapUiSmallMargin"/>
+                <TextArea id="commentsText" value="{comments}"/>
+            </l:HorizontalLayout>
+
+        </l:VerticalLayout>
+	  </content>
+	  <buttons>
+	    <Button text="Save" press="onSavePress" type="Emphasized" />
+        <Button text="Cancel" press="onCancelPress" />
+	  </buttons>
+	</Dialog>
+</core:FragmentDefinition>

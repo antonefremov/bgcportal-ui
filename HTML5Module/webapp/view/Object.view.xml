@@ -110,27 +110,9 @@
                                                     <Column hAlign="Center" width="10%">
                                                         <Text text="BGC Status"/>
                                                     </Column>
-                                                     <Column hAlign="Center"  id="idApproveColumn" width="6%"> 
+                                                     <Column hAlign="Center"  id="idApproveEditColumn" width="6%"> 
                                                         <Text text=""/>
                                                     </Column>
-                                                     <Column hAlign="Center" id="idDisapproveColumn" width="6%">
-                                                        <Text text=""/>
-                                                    </Column>
-                                                    <!-- <Column hAlign="Center" visible="true" >
-                                                        <Text text=""/>
-                                                    </Column> 
-                                                    <Column hAlign="Center" visible="false" width="0%">
-                                                        <Text text=""/>
-                                                    </Column> 
-                                                    <Column hAlign="Center" visible="false" width="0%">
-                                                        <Text text=""/>
-                                                    </Column> 
-                                                    <Column hAlign="Center" visible="false" width="0%">
-                                                        <Text text=""/>
-                                                    </Column> 
-                                                    <Column hAlign="Center" visible="false" width="0%">
-                                                        <Text text=""/>
-                                                    </Column>  -->
                                                 </columns>
                                             </Table>
                                         </Page>
