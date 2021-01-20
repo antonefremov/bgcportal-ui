@@ -1,0 +1,32 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core">
+	<Dialog title="Approve BGC" class="dialogStyle">
+	<content>
+        <l:VerticalLayout>
+            <l:HorizontalLayout> 
+                <Text text="High Priority Issues: " class="sapUiSmallMargin"/>
+                <Text text="0"  class="sapUiSmallMargin"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Low Priority Issues: " class="sapUiSmallMargin"/>
+                <Text text="1"  class="sapUiSmallMargin"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Additional Approval Required: " class="sapUiSmallMargin"/>
+                <Switch  state="true" type="AcceptReject"/>
+            </l:HorizontalLayout>
+              <l:HorizontalLayout> 
+                <Text text="Comments: " class="sapUiSmallMargin"/>
+                <TextArea id="commentsText" value=""/>
+            </l:HorizontalLayout>
+
+        </l:VerticalLayout>
+	  </content>
+	  <buttons>
+	    <Button text="Approve" press="onApproveBGCPress" type="Emphasized" />
+        <Button text="Cancel" press="onCancelBGCPress" />
+	  </buttons>
+	</Dialog>
+</core:FragmentDefinition>

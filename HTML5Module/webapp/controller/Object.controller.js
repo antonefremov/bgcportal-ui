@@ -125,10 +125,11 @@ sap.ui.define([
 		 * @private
 		 */
         _bindMasterList: function () {
-            var list = this.getView().byId("masterPageListID"),
+            var oThis= this;
+             oThis.list = this.getView().byId("masterPageListID");
 
                 //changing StandardListItem item to CustomListItem to include microchart
-                oItemTemplate = new sap.m.CustomListItem({
+               var oItemTemplate = new sap.m.CustomListItem({
                     type: sap.m.ListType.Active,
                     content: [
                         new sap.m.HBox({
@@ -145,24 +146,20 @@ sap.ui.define([
                                         new sap.m.Label({
                                             text: "{screeningTaskTypeName}"
                                         })]
-                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom")
-
+                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
+                                 
+                                // code to add radial chart to show completion
+                                 new sap.m.VBox({
+                                   items:[
+                                    new sap.suite.ui.microchart.RadialMicroChart({
+                                            size:"S",
+                                            percentage:"{completion}"
+                                            })
+                                        ]
+                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
                             ]
-                        })
-
-                        // code to add radial chart to show completion(like mockup) in the list
-                        // but somehow it does not take sap.suite as a valid library!
-
-                        // new sap.m.VBox({vertical:true, items:[
-                        // new sap.suite.ui.microchart.RadialMicroChart({
-                        //     size:"S",
-                        //     percentage:"{completion}", 
-                        //     valueColor:"Error",
-                        //     class:"sapUiSmallMargin"
-                        // })
-                        // ]
-                        // })
-                    ]
+                        })                       
+                    ]                
                 })
             // create a CustomData template, set its key to "answer" and bind its value to the answer data
             var oDataTemplate = new sap.ui.core.CustomData({ key: "screeningId", value: "{ID}" });
@@ -170,13 +167,17 @@ sap.ui.define([
             // add the CustomData template to the item template
             oItemTemplate.addCustomData(oDataTemplate);
 
-            list.bindItems({
+            oThis.list.bindItems({
                 path: "/MyScreeningTask",
                 template: oItemTemplate,
                 parameters: {
                     $filter: "candidateID eq " + this.objectId
                 }
             })
+
+            oThis.list.getBinding("items").attachDataReceived(function (evt){
+                  // oThis.list.fireItemPress(oThis.list.getItems()[0]);
+            });
         },
 
         _navToDetailPage: function (oEvent) {
@@ -209,15 +210,15 @@ sap.ui.define([
                         new sap.m.Text({ text: "{email}" }),
                         new sap.m.Text({ text: "{phone}" }),
                         new sap.m.Button({ text: "1", icon: "sap-icon://show", press: oThis._showDocument }),
-                        //new sap.m.Text({ text: "{statusDesc}" }),
-                        new sap.m.Text({ text: "" }),
+                        new sap.m.Text({ text: "{status/description}" }),
                         new sap.m.Button({ icon: "sap-icon://accept", press: oThis._openAprroveRejectDialog.bind(oThis) }) 
                     ]
                 }),
                 templateShareable: true,
                  parameters: {
                      $filter: "screeningTask_ID eq " + screeningTaskId,
-                     $$updateGroupId: 'EmploymentHistoryUpdateGroup'
+                     $$updateGroupId: 'EmploymentHistoryUpdateGroup',
+                     $expand:'status'
                  }
             });
         },
@@ -355,6 +356,28 @@ sap.ui.define([
             opdfViewer.setSource(sSource);
             opdfViewer.setTitle("PDF file");
             opdfViewer.open();
+        },
+
+        openApproveBGCDialog: function(oEvent){
+         var oThis = this;
+                if (!oThis._oApproveBGCDialog) {
+                    oThis._oApproveBGCDialog = sap.ui.xmlfragment("ns.HTML5Module.Fragments.ApproveBGCDialog", this);
+                }
+                
+                //setting the binding context and model in dialog for binding
+                //var oBindingContext = oEvent.getSource().getBindingContext();
+                //oThis._oApproveBGCDialog.setBindingContext(oBindingContext);
+                //oThis._oApproveBGCDialog.setModel(oEvent.getSource().getBindingContext().getModel());
+               // oThis.currentEmployerId = oEvent.getSource().getBindingContext().getProperty("ID");
+                // oThis._oDialog.attachModelContextChange(function (evt){
+                //         oThis._oDialog.open();
+                // })
+                oThis._oApproveBGCDialog.open();
+        },
+         onCancelBGCPress: function(oEvent){
+            //var currentModel= oEvent.getSource().getBindingContext().getModel();;
+             //currentModel.resetChanges("EmploymentHistoryUpdateGroup");
+             this._oApproveBGCDialog.close();
         },
 
         _onBindingChange: function () {

@@ -24,7 +24,7 @@
 				    </uxap:snappedContent>
 
                     <uxap:actions>
-				    <Button text="Approve BGC" press="aprroveBGC" type="Emphasized"/>
+				    <Button text="Approve BGC" press="openApproveBGCDialog" type="Emphasized"/>
 					<Button text="Reject" press="rejectBGC"/>
 				   </uxap:actions>
 
@@ -71,7 +71,7 @@
                             	<SplitContainer
                                     class="mySplitClass"
                                     id="SplitContDemo"
-                                    initialDetail="EmploymentHistorydetailPage"
+                                    initialDetail=""
                                     initialMaster="master">
                                     <detailPages>
                                         <Page 
@@ -118,7 +118,7 @@
                                         </Page>
                                         <Page 
                                             id="DrugUseTestDetailPage"
-                                            title="Drug Use Test"
+                                            showHeader="false"
                                             backgroundDesign= "Solid"
                                             class="sapUiStdPage"
                                             showNavButton="false"
@@ -130,6 +130,18 @@
                                                 growing="true"
                                                 growingScrollToLoad="true"
                                                 updateFinished=".onUpdateFinished">
+                                                	<headerToolbar>
+                                                        <OverflowToolbar>
+                                                            <content>
+                                                                <Title text="Drug Use Test" />
+                                                                <ToolbarSpacer />
+                                                                <Button id="idUploadModicalRecords"
+                                                                    text="Upload Medical Records"
+                                                                    press="onUploadModicalRecords" 
+                                                                    type="Emphasized"/>
+                                                            </content>
+                                                        </OverflowToolbar>
+                                                    </headerToolbar>
                                                 <columns>
                                                     <Column>
                                                         <Text text="Drug Type"/>
