@@ -216,7 +216,8 @@ sap.ui.define([
                 }),
                 templateShareable: true,
                  parameters: {
-                     $filter: "screeningTask_ID eq " + screeningTaskId
+                     $filter: "screeningTask_ID eq " + screeningTaskId,
+                     $$updateGroupId: 'EmploymentHistoryUpdateGroup'
                  }
             });
         },
@@ -243,22 +244,28 @@ sap.ui.define([
         // updates the service. So, there is actually no use of save button functionality in this screnario
         //or need to change code to a bit to call only on save by using local model 
         onSavePress: function(oEvent){
+           
             var oThis=this;
             var oBindingContextDialog= oEvent.getSource().getBindingContext();
             oThis.currentModel = oBindingContextDialog.getModel();
+             oThis.currentModel.submitBatch("EmploymentHistoryUpdateGroup").then(function(){
+               // if (!that.byId("mySimpleForm").getBindingContext().getBinding().hasPendingChanges()){
+                    // raise success message
+                //}
+            });
                // oThis._oDialog.setBusy(true);
-                var empConfirmSwitch = sap.ui.getCore().byId("empConfirmSwitch").getState();
-                var ctcConfirmationSwitch = sap.ui.getCore().byId("ctcConfirmationSwitch").getState();
-                var documentsVerifiedSwitch = sap.ui.getCore().byId("documentsVerifiedSwitch").getState();
+               // var empConfirmSwitch = sap.ui.getCore().byId("empConfirmSwitch").getState();
+               // var ctcConfirmationSwitch = sap.ui.getCore().byId("ctcConfirmationSwitch").getState();
+               // var documentsVerifiedSwitch = sap.ui.getCore().byId("documentsVerifiedSwitch").getState();
                 //var conductComboBox = sap.ui.getCore().byId("conductComboBox").getSelectedKey();
-                var commentsText = sap.ui.getCore().byId("commentsText").getValue();
-
+               // var commentsText = sap.ui.getCore().byId("commentsText").getValue();
+               
                             //set property calls the patch request 
-                            oBindingContextDialog.setProperty("employmentConfirmation", empConfirmSwitch);
-                            oBindingContextDialog.setProperty("ctcConfirmation", ctcConfirmationSwitch);
-                            oBindingContextDialog.setProperty("documentsVerified", documentsVerifiedSwitch);
+                            //oBindingContextDialog.setProperty("employmentConfirmation", empConfirmSwitch);
+                            //oBindingContextDialog.setProperty("ctcConfirmation", ctcConfirmationSwitch);
+                            //oBindingContextDialog.setProperty("documentsVerified", documentsVerifiedSwitch);
                             //oBindingContextDialog.setProperty("conductID", conductComboBox);
-                            oBindingContextDialog.setProperty("comments", commentsText);
+                            //oBindingContextDialog.setProperty("comments", commentsText);
 
                             //  "ID": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC",
                             //  "employmentConfirmation": true, 
@@ -303,7 +310,9 @@ sap.ui.define([
                         
         },
 
-        onCancelPress: function(){
+        onCancelPress: function(oEvent){
+            var currentModel= oEvent.getSource().getBindingContext().getModel();;
+             currentModel.resetChanges("EmploymentHistoryUpdateGroup");
              this._oDialog.close();
         },
 
