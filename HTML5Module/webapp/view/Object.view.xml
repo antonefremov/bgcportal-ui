@@ -12,15 +12,15 @@
 				<uxap:headerTitle>
 				  <uxap:ObjectPageDynamicHeaderTitle>
 					<uxap:heading>
-					<Title text="{firstName} {lastName}" />
+					<Title text="{candidate/firstName} {candidate/lastName}" />
 			     	</uxap:heading>
 
 				    <uxap:expandedContent>
-					<Text text="{categoryDesc}"/>
+					<Text text="{category/description}"/>
 				    </uxap:expandedContent>
 
 				    <uxap:snappedContent>
-					<Text text="{categoryDesc}"/>
+					<Text text="{category/description}"/>
 				    </uxap:snappedContent>
 
                     <uxap:actions>
@@ -37,9 +37,9 @@
 				</l:VerticalLayout>
 
 				<l:VerticalLayout class="sapUiSmallMarginEnd">
-					<ObjectStatus title="Location" text="{location}"/>
-					<ObjectStatus title="Phone" text="{phone}"/>
-					<ObjectStatus title="Email" text="{email}"/>
+					<ObjectStatus title="Location" text="{candidate/location}"/>
+					<ObjectStatus title="Phone" text="{candidate/phone}"/>
+					<ObjectStatus title="Email" text="{candidate/email}"/>
 				</l:VerticalLayout>
 
 				<l:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -54,12 +54,12 @@
 
                 <l:VerticalLayout class="sapUiSmallMarginEnd">
 					<Label text="Experience" />
-                    <Label text="{experience}"/>
+                    <Label text="{candidate/experience}"/>
 				</l:VerticalLayout>
 
                 <l:VerticalLayout class="sapUiSmallMarginEnd">
 					<Label text="Status" />
-                    <Label text="{statusDesc}"/>
+                    <Label text="{status/description}"/>
 				</l:VerticalLayout>
 
 			     </FlexBox> 
@@ -76,10 +76,11 @@
                                     <detailPages>
                                         <Page 
                                             id="EmploymentHistorydetailPage"
-                                            title="Employment History"
+                                            showHeader="false"
                                             backgroundDesign= "Solid"
                                             class="sapUiStdPage"
                                             showNavButton="false"
+                                            visible="false"
                                             >
                                          	<Table
                                                 id="idEmployementHistoryTable"
@@ -88,6 +89,13 @@
                                                 growing="true"
                                                 growingScrollToLoad="true"
                                                 updateFinished="_onUpdateFinished">
+                                                <headerToolbar>
+                                                        <OverflowToolbar>
+                                                            <content>
+                                                                <Title text="Employment History" />
+                                                            </content>
+                                                        </OverflowToolbar>
+                                                    </headerToolbar>
                                                 <columns>
                                                     <Column id="nameColumn">
                                                         <Text text="Employer Name" id="nameColumnTitle"/>
@@ -122,6 +130,7 @@
                                             backgroundDesign= "Solid"
                                             class="sapUiStdPage"
                                             showNavButton="false"
+                                            visible="false"
                                             >
                                          	<Table
                                                 id="idDrugUseTestTable"
@@ -173,10 +182,10 @@
                                             showHeader="false"
                                             id="master"
                                             backgroundDesign= "List"
-                                            class="sapUiStdPage">
-                                          <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="auto" class="sapUiResponsiveMargin">
+                                            class="">
+                                          <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="auto" class="">
 		                                  <content>
-                                          <List id="masterPageListID" itemPress="_navToDetailPage"> 
+                                          <List id="masterPageListID" > 
                                             </List>                                         
                                             </content>
                                             </Panel>

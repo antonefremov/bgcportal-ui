@@ -19,12 +19,12 @@
             </l:HorizontalLayout>
               <l:HorizontalLayout> 
                 <Text text="Conduct: " class="sapUiSmallMargin"/>
-                <ComboBox id="conductComboBox" selectedKey="{conduct_ID}">
+                <ComboBox id="conductComboBox" selectedKey="{conduct/ID}">
                     <items>
                         <core:Item key="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA" text="Very Good" />
-                        <core:Item key="GoodKey" text="Good" />
-                        <core:Item key="QuestionableKey" text="Questionable" />
-                        <core:Item key="InappropriateKey" text="Inappropriate" />
+                        <core:Item key="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB" text="Good" />
+                        <core:Item key="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC" text="Questionable" />
+                        <core:Item key="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAD" text="Inappropriate" /> 
                     </items>
                 </ComboBox>
             </l:HorizontalLayout>

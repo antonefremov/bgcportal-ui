@@ -85,12 +85,11 @@ sap.ui.define([
         _onObjectMatched: function (oEvent) {
             this.objectId = oEvent.getParameter("arguments").objectId;
             //this.screeningTaskId =  oEvent.getParameter("arguments").screeningTaskId; 
-            this._bindView("/MyRequests" + this.objectId);
+            this._bindView("/Request",this.objectId);
             this._bindMasterList();
             //destroying content of table everytime we enter for new candidate to get fresh data
             this.getView().byId("idEmployementHistoryTable").destroyItems();
             this.getView().byId("idDrugUseTestTable").destroyItems();
-
             //this._bindEmploymentHistoryTable(this.screeningTaskId);
 
         },
@@ -101,11 +100,17 @@ sap.ui.define([
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-        _bindView: function (sObjectPath) {
+        _bindView: function (sObjectPath,ID) {
             var oViewModel = this.getModel("objectView");
 
             this.getView().bindElement({
                 path: sObjectPath,
+                parameters: {
+                                $filter: "ID eq " + ID,
+                                // $$updateGroupId: 'EmploymentHistoryUpdateGroup',
+                                $expand:'category,status,assignedToAgent,candidate'
+                                
+                           },
                 events: {
                     change: this._onBindingChange.bind(this),
                     dataRequested: function () {
@@ -131,32 +136,45 @@ sap.ui.define([
                 //changing StandardListItem item to CustomListItem to include microchart
                var oItemTemplate = new sap.m.CustomListItem({
                     type: sap.m.ListType.Active,
+                    press:oThis._navToDetailPage.bind(oThis),
                     content: [
-                        new sap.m.HBox({
+                        new sap.m.HBox({  
+                            //JustifyItems:sap.m.FlexAlignContent.SpaceBetween,                   
                             items: [
-                                new sap.ui.core.Icon({
-                                    size: "2rem",
-                                    src: "sap-icon://attachment-photo",
-                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
-                                new sap.m.VBox({
-                                    items: [
-                                        new sap.m.Title({
-                                            text: "{screeningTaskTypeDescription}"
-                                        }),
-                                        new sap.m.Label({
-                                            text: "{screeningTaskTypeName}"
-                                        })]
-                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
-                                 
-                                // code to add radial chart to show completion
-                                 new sap.m.VBox({
+                                new sap.m.HBox({
+                                   //JustifyItems: sap.m.FlexAlignContent.Start,
                                    items:[
-                                    new sap.suite.ui.microchart.RadialMicroChart({
-                                            size:"S",
-                                            percentage:"{completion}"
-                                            })
-                                        ]
-                                }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
+                                          new sap.m.VBox({
+                                         items:[
+                                                new sap.ui.core.Icon({
+                                                    size: "2rem",
+                                                    src: "sap-icon://attachment-photo",
+                                                })
+                                            ]
+                                          }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
+                                            new sap.m.VBox({
+                                                items: [
+                                                    new sap.m.Title({
+                                                        text: "{screeningTaskTypeDescription}"
+                                                    }),
+                                                    new sap.m.Label({
+                                                        text: "{screeningTaskTypeName}"
+                                                    })]
+                                            }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
+                                            
+                                        ] 
+                                    }),
+                               
+                                    // code to add radial chart to show completion
+                                    new sap.m.HBox({
+                                       // JustifyItems:sap.m.FlexAlignContent.End,
+                                        items:[
+                                            new sap.suite.ui.microchart.RadialMicroChart({
+                                                    size:"S",
+                                                    percentage:"{completion}"
+                                                    })
+                                                ]
+                                        }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
                             ]
                         })                       
                     ]                
@@ -170,27 +188,30 @@ sap.ui.define([
             oThis.list.bindItems({
                 path: "/MyScreeningTask",
                 template: oItemTemplate,
+                 templateShareable: true,
                 parameters: {
                     $filter: "candidateID eq " + this.objectId
                 }
             })
 
-            oThis.list.getBinding("items").attachDataReceived(function (evt){
-                  // oThis.list.fireItemPress(oThis.list.getItems()[0]);
+            oThis.list.getBinding("items").attachDataReceived(function (){
+                  oThis.list.getItems()[0].firePress();
             });
         },
 
         _navToDetailPage: function (oEvent) {
             var splitApp = this.getView().byId("SplitContDemo");
-            var screeningTaskId = oEvent.getParameters().listItem.getBindingContext().getProperty("ID");
-            var sListItemtitle = oEvent.getParameters().listItem.getBindingContext().getProperty("screeningTaskTypeDescription");
-            switch (sListItemtitle) {
+            var screeningTaskId = oEvent.getSource().getBindingContext().getProperty("ID");
+            var sListItemtitle = oEvent.getSource().getBindingContext().getProperty("screeningTaskTypeDescription");
+             switch (sListItemtitle) {
                 case "Employment History":
                     splitApp.toDetail(this.createId("EmploymentHistorydetailPage"));
+                    this.getView().byId("EmploymentHistorydetailPage").setVisible(true);
                     this._bindEmploymentHistoryTable(screeningTaskId);
                     break;
                 case "Drug Use Test":
                     splitApp.toDetail(this.createId("DrugUseTestDetailPage"));
+                    this.getView().byId("DrugUseTestDetailPage").setVisible(true);
                     this._bindDrugUseTestTable(screeningTaskId);
                     break;
             }
@@ -218,96 +239,52 @@ sap.ui.define([
                  parameters: {
                      $filter: "screeningTask_ID eq " + screeningTaskId,
                      $$updateGroupId: 'EmploymentHistoryUpdateGroup',
-                     $expand:'status'
-                 }
+                     $expand:'status,conduct'
+                 },
+                  
             });
         },
 
         //load fragment with dialog for approve and reject employment History
         _openAprroveRejectDialog: function(oEvent){
             var oThis = this;
+            oThis.getView().setBusy(true);
                 if (!oThis._oDialog) {
                     oThis._oDialog = sap.ui.xmlfragment("ns.HTML5Module.Fragments.ApproveRejectDialog", this);
+                }           
+                oThis._oDialog.setModel(oEvent.getSource().getBindingContext().getModel());
+               oThis._oDialog.bindElement({
+                path: oEvent.getSource().getBindingContext().getPath(),
+                events: {
+                    change: this._onBindingChange.bind(this),
+                    dataRequested: function () {
+                         
+                    },
+                    dataReceived: function () {
+                         //oThis._oDialog.setBusy(false);
+                       
+                          oThis.getView().setBusy(false);
+                        
+                    }
                 }
                 
-                //setting the binding context and model in dialog for binding
-                var oBindingContext = oEvent.getSource().getBindingContext();
-                oThis._oDialog.setBindingContext(oBindingContext);
-                oThis._oDialog.setModel(oEvent.getSource().getBindingContext().getModel());
-                oThis.currentEmployerId = oEvent.getSource().getBindingContext().getProperty("ID");
-                // oThis._oDialog.attachModelContextChange(function (evt){
-                //         oThis._oDialog.open();
-                // })
-                oThis._oDialog.open();
+            });
+               oThis._oDialog.open();
+                
         },
 
-        // NOTE : with every interaction/change in UI patch call is triggered automatically and
-        // updates the service. So, there is actually no use of save button functionality in this screnario
-        //or need to change code to a bit to call only on save by using local model 
+        //batch call trigerred with all the changes on press of save 
         onSavePress: function(oEvent){
            
             var oThis=this;
             var oBindingContextDialog= oEvent.getSource().getBindingContext();
             oThis.currentModel = oBindingContextDialog.getModel();
              oThis.currentModel.submitBatch("EmploymentHistoryUpdateGroup").then(function(){
-               // if (!that.byId("mySimpleForm").getBindingContext().getBinding().hasPendingChanges()){
                     // raise success message
-                //}
+                    oThis.currentModel.refresh();
+                   // oThis.currentModel.updateBinding(true);
             });
-               // oThis._oDialog.setBusy(true);
-               // var empConfirmSwitch = sap.ui.getCore().byId("empConfirmSwitch").getState();
-               // var ctcConfirmationSwitch = sap.ui.getCore().byId("ctcConfirmationSwitch").getState();
-               // var documentsVerifiedSwitch = sap.ui.getCore().byId("documentsVerifiedSwitch").getState();
-                //var conductComboBox = sap.ui.getCore().byId("conductComboBox").getSelectedKey();
-               // var commentsText = sap.ui.getCore().byId("commentsText").getValue();
-               
-                            //set property calls the patch request 
-                            //oBindingContextDialog.setProperty("employmentConfirmation", empConfirmSwitch);
-                            //oBindingContextDialog.setProperty("ctcConfirmation", ctcConfirmationSwitch);
-                            //oBindingContextDialog.setProperty("documentsVerified", documentsVerifiedSwitch);
-                            //oBindingContextDialog.setProperty("conductID", conductComboBox);
-                            //oBindingContextDialog.setProperty("comments", commentsText);
-
-                            //  "ID": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAC",
-                            //  "employmentConfirmation": true, 
-                            //  "ctcConfirmation": true,
-                            //  "documentsVerified": true,
-                            //  "conductID": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAB",
-                            //  "comments": "New comments"
-
-                // var obj = {
-                //             ID: this.currentEmployerId,
-                //             employmentConfirmation: empConfirmSwitch,
-                //             ctcConfirmation: ctcConfirmationSwitch,
-                //             documentsVerified: documentsVerifiedSwitch,
-                //             conductID: conductComboBox, // <- has to be a proper uuid, an empty string is not allowed
-                //             comments: commentsText
-                //         };
-
-                //     jQuery.ajax({
-                //                 type: 'POST',
-                //                 contentType: 'application/json',
-                //                 url: "/nsHTML5Module/bgcportal/api/v1/confirmEmploymentHistory",
-                //                 data: JSON.stringify(obj),
-                //                 success: function (data) {
-                //                     //console.log("success: " + JSON.stringify(data));
-                //                     oThis.currentModel.refresh();
-                //                     sap.m.MessageBox.alert("Request Saved", {
-                //                     icon: sap.m.MessageBox.Icon.SUCCESS,
-                //                     title: "Success"
-				// 	                });
-                //                 },
-                //                 error: function (e) {
-                //                     console.log("error: " + JSON.stringify(e));
-                //                 }
-                //     });
-                        // oEvent.getSource().getBindingContext().getBinding().attachPatchCompleted(function (evt) {
-                        //         evt.getSource().getModel().refresh();
-                        //         oThis._oDialog.setBusy(false);
-                                
-                                  
-						// 	});
-               oThis._oDialog.close();
+            oThis._oDialog.close();
                         
         },
 
@@ -360,24 +337,24 @@ sap.ui.define([
 
         openApproveBGCDialog: function(oEvent){
          var oThis = this;
-                if (!oThis._oApproveBGCDialog) {
+                if (!oThis._oApproveBGCDialog){
                     oThis._oApproveBGCDialog = sap.ui.xmlfragment("ns.HTML5Module.Fragments.ApproveBGCDialog", this);
+                      //setting the binding context and model in dialog for binding
+                        var oBindingContext = oEvent.getSource().getBindingContext();
+                         oThis._oApproveBGCDialog.setBindingContext(oBindingContext);
+                         oThis._oApproveBGCDialog.setModel(oEvent.getSource().getBindingContext().getModel());
+                        
                 }
-                
-                //setting the binding context and model in dialog for binding
-                //var oBindingContext = oEvent.getSource().getBindingContext();
-                //oThis._oApproveBGCDialog.setBindingContext(oBindingContext);
-                //oThis._oApproveBGCDialog.setModel(oEvent.getSource().getBindingContext().getModel());
-               // oThis.currentEmployerId = oEvent.getSource().getBindingContext().getProperty("ID");
-                // oThis._oDialog.attachModelContextChange(function (evt){
-                //         oThis._oDialog.open();
-                // })
-                oThis._oApproveBGCDialog.open();
+               
+               oThis._oApproveBGCDialog.open();
         },
          onCancelBGCPress: function(oEvent){
             //var currentModel= oEvent.getSource().getBindingContext().getModel();;
              //currentModel.resetChanges("EmploymentHistoryUpdateGroup");
              this._oApproveBGCDialog.close();
+        },
+        onApproveBGCPress: function(oEvent){
+            oEvent.getSource().getBindingContext().setProperty("statusDesc","Completed");
         },
 
         _onBindingChange: function () {

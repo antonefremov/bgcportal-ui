@@ -19,7 +19,7 @@
             </l:HorizontalLayout>
               <l:HorizontalLayout> 
                 <Text text="Comments: " class="sapUiSmallMargin"/>
-                <TextArea id="commentsText" value=""/>
+                <TextArea  value=""/>
             </l:HorizontalLayout>
 
         </l:VerticalLayout>
