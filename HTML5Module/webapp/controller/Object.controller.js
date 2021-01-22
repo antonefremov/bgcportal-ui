@@ -104,9 +104,9 @@ sap.ui.define([
             var oViewModel = this.getModel("objectView");
 
             this.getView().bindElement({
-                path: sObjectPath,
+                path: sObjectPath + ID,
                 parameters: {
-                                $filter: "ID eq " + ID,
+                                // $filter: "ID eq " + ID,
                                 // $$updateGroupId: 'EmploymentHistoryUpdateGroup',
                                 $expand:'category,status,assignedToAgent,candidate'
                                 
