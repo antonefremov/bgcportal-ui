@@ -138,10 +138,11 @@ sap.ui.define([
                     type: sap.m.ListType.Active,
                     press:oThis._navToDetailPage.bind(oThis),
                     content: [
-                        new sap.m.HBox({  
-                            //JustifyItems:sap.m.FlexAlignContent.SpaceBetween,                   
-                            items: [
-                                new sap.m.HBox({
+                       new sap.m.FlexBox({
+                           alignItems:"Start",
+                           justifyContent:"SpaceBetween",
+                           items:[
+                                    new sap.m.HBox({
                                    //JustifyItems: sap.m.FlexAlignContent.Start,
                                    items:[
                                           new sap.m.VBox({
@@ -164,21 +165,22 @@ sap.ui.define([
                                             
                                         ] 
                                     }),
-                               
-                                    // code to add radial chart to show completion
+                                      // code to add radial chart to show completion
                                     new sap.m.HBox({
-                                       // JustifyItems:sap.m.FlexAlignContent.End,
-                                        items:[
+                                      width:"20%",
+                                      items:[
                                             new sap.suite.ui.microchart.RadialMicroChart({
+                                                    width:"0rem",
                                                     size:"S",
                                                     percentage:"{completion}"
                                                     })
                                                 ]
-                                        }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),
-                            ]
-                        })                       
-                    ]                
-                })
+                                        }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom"),                                   
+                                ]
+                        })
+                     ] 
+                 });
+
             // create a CustomData template, set its key to "answer" and bind its value to the answer data
             var oDataTemplate = new sap.ui.core.CustomData({ key: "screeningId", value: "{ID}" });
 
@@ -248,22 +250,23 @@ sap.ui.define([
         //load fragment with dialog for approve and reject employment History
         _openAprroveRejectDialog: function(oEvent){
             var oThis = this;
-            oThis.getView().setBusy(true);
+           // oThis.getView().setBusy(true);
+          
                 if (!oThis._oDialog) {
                     oThis._oDialog = sap.ui.xmlfragment("ns.HTML5Module.Fragments.ApproveRejectDialog", this);
-                }           
+                }  
+                 oThis._oDialog.setBusy(true);         
                 oThis._oDialog.setModel(oEvent.getSource().getBindingContext().getModel());
                oThis._oDialog.bindElement({
                 path: oEvent.getSource().getBindingContext().getPath(),
                 events: {
-                    change: this._onBindingChange.bind(this),
+                   // change: this._onBindingChange.bind(this),
                     dataRequested: function () {
                          
                     },
                     dataReceived: function () {
-                         //oThis._oDialog.setBusy(false);
-                       
-                          oThis.getView().setBusy(false);
+                         oThis._oDialog.setBusy(false);
+                        //oThis.getView().setBusy(false);
                         
                     }
                 }
@@ -279,7 +282,7 @@ sap.ui.define([
             var oThis=this;
             var oBindingContextDialog= oEvent.getSource().getBindingContext();
             oThis.currentModel = oBindingContextDialog.getModel();
-             oThis.currentModel.submitBatch("EmploymentHistoryUpdateGroup").then(function(){
+             oThis.currentModel.submitBatch("EmploymentHistoryUpdateGroup").then(function(evt){
                     // raise success message
                     oThis.currentModel.refresh();
                    // oThis.currentModel.updateBinding(true);
@@ -354,9 +357,12 @@ sap.ui.define([
              this._oApproveBGCDialog.close();
         },
         onApproveBGCPress: function(oEvent){
-            oEvent.getSource().getBindingContext().setProperty("statusDesc","Completed");
+            oEvent.getSource().getBindingContext().setProperty("status/description","Completed");
+             this._oApproveBGCDialog.close();
         },
-
+        onRejectBGC: function(oEvent){
+            oEvent.getSource().getBindingContext().setProperty("status/description","Rejected");
+        },
         _onBindingChange: function () {
             var oView = this.getView(),
                 oViewModel = this.getModel("objectView"),

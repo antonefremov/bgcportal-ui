@@ -25,7 +25,7 @@
 
                     <uxap:actions>
 				    <Button text="Approve BGC" press="openApproveBGCDialog" type="Emphasized"/>
-					<Button text="Reject" press="rejectBGC"/>
+					<Button text="Reject" press="onRejectBGC"/>
 				   </uxap:actions>
 
 				   </uxap:ObjectPageDynamicHeaderTitle>
@@ -183,7 +183,7 @@
                                             id="master"
                                             backgroundDesign= "List"
                                             class="">
-                                          <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="auto" class="">
+                                          <Panel expandable="true" expanded="true" headerText="Screening Tasks" width="100%" class="">
 		                                  <content>
                                           <List id="masterPageListID" > 
                                             </List>                                         
