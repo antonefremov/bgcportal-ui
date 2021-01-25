@@ -259,6 +259,11 @@ sap.ui.define([
                 oThis._oDialog.setModel(oEvent.getSource().getBindingContext().getModel());
                oThis._oDialog.bindElement({
                 path: oEvent.getSource().getBindingContext().getPath(),
+                parameters: {
+                    // $filter: "screeningTask_ID eq " + screeningTaskId,
+                     $$updateGroupId: 'EmploymentHistoryUpdateGroup',
+                     //$expand:'status,conduct'
+                 },
                 events: {
                    // change: this._onBindingChange.bind(this),
                     dataRequested: function () {
