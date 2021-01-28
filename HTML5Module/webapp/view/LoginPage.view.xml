@@ -1,0 +1,37 @@
+<mvc:View
+	controllerName="ns.HTML5Module.controller.LoginPage"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.f"
+	xmlns:card="sap.f.cards"
+	xmlns:core="sap.ui.core"
+	displayBlock="true"
+	height="100%">
+    <FlexBox
+        alignItems="Center"
+        justifyContent="Center">
+	<f:Card class="sapUiMediumMargin" width="300px">
+		<f:header>
+			<card:Header
+				title="Genpact"/>
+				<!-- iconSrc="sap-icon://bus-public-transport" /> -->
+		</f:header>
+		<f:content>
+			<VBox
+				height="200px"
+				class="sapUiLargeMargin"
+				justifyContent="SpaceBetween">
+				<VBox justifyContent="SpaceBetween">
+					<Label text="User Name"/>
+					<Input id="userInputId" placeholder="Enter your user name" />
+				</VBox>
+				<VBox renderType="Bare" justifyContent="SpaceBetween">
+					<Label text="Password"/>
+					<Input id="passwordInputId" type="Password" placeholder="Enter your password" />
+				</VBox>
+                <Button text= "Sign In" type="Emphasized" press="OnSignInButtonPress"/>
+			</VBox>
+		</f:content>
+	</f:Card>
+  </FlexBox>
+</mvc:View>

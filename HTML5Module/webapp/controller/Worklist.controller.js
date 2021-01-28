@@ -32,11 +32,14 @@ sap.ui.define([
 				shareSendEmailSubject: this.getResourceBundle().getText("shareSendEmailWorklistSubject"),
 				shareSendEmailMessage: this.getResourceBundle().getText("shareSendEmailWorklistMessage", [location.href]),
 				tableNoDataText : this.getResourceBundle().getText("tableNoDataText")
-			});
+            });
+            //this.getRouter().getRoute("worklist").attachPatternMatched(this._onObjectMatched, this);
 			this.setModel(oViewModel, "worklistView");
 
 		},
+        //  _onObjectMatched : function(){
 
+        //  },
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */

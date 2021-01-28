@@ -20,8 +20,28 @@
           "localUri": "localService/metadata.xml"
         }
       }
+    },
+    "crossNavigation": {
+    "inbounds": {
+        "intent1": {
+            "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "portalDemo",
+                    "action": "display",
+                    "title": "Fiori App",
+                    "info": "running in Portal",
+                    "subTitle": "my subtitle",
+                    "icon": "sap-icon://account"
+            }
+        }
     }
   },
+   "sap.cloud": {
+        "public": true,
+        "service": "my_service"
+ },    
   "sap.fiori": {
     "registrationIds": [],
     "archeType": "transactional"
@@ -94,15 +114,22 @@
         "async": true
       },
       "routes": [
-        {
+          {
           "pattern": "",
+          "name": "loginPage",
+          "target": [
+            "loginPage"
+          ]
+        },
+        {
+          "pattern": "worklist",
           "name": "worklist",
           "target": [
             "worklist"
           ]
         },
         {
-          "pattern": "Request/{objectId}",
+          "pattern": "worklist/{objectId}",
           "name": "object",
           "target": [
             "object"
@@ -110,16 +137,22 @@
         }
       ],
       "targets": {
+        "loginPage": {
+          "viewName": "LoginPage",
+          "viewId": "loginPage",
+          "viewLevel": 1,
+          "title": ""
+        },
         "worklist": {
           "viewName": "Worklist",
           "viewId": "worklist",
-          "viewLevel": 1,
+          "viewLevel": 2,
           "title": "{i18n>worklistViewTitle}"
         },
         "object": {
           "viewName": "Object",
           "viewId": "object",
-          "viewLevel": 2,
+          "viewLevel": 3,
           "title": "{i18n>objectViewTitle}"
         },
         "objectNotFound": {
