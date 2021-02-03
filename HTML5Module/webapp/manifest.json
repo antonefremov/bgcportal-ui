@@ -129,7 +129,7 @@
           ]
         },
         {
-          "pattern": "worklist/{objectId}",
+          "pattern": "worklist/ {processId} , {objectId}",
           "name": "object",
           "target": [
             "object"

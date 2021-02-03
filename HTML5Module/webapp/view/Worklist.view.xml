@@ -49,9 +49,9 @@
                                         selectionChange="handleSelectionChange"
                                         selectionFinish="handleSelectionFinish"
                                         items="{
-                                                    path: '/MyRequests'
+                                                    path: '/Request'
                                                 }">
-										<core:Item key="{ID}" text="{firstName} {lastName}"/>
+										<core:Item key="{ID}" text="{candidate/firstName} {candidate/lastName}"/>
                                         </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -62,9 +62,9 @@
                                         selectionChange="handleSelectionChange"
                                         selectionFinish="handleSelectionFinish"
                                         items="{
-                                                    path: '/MyRequests'
+                                                    path: '/Request'
                                                  }">
-										<core:Item key="{categoryID}" text="{categoryDesc}"/>
+										<core:Item key="{category/ID}" text="{category/description}"/>
                                         </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -75,9 +75,9 @@
                                         selectionChange="handleSelectionChange"
                                         selectionFinish="handleSelectionFinish"
                                        items="{
-                                                    path: '/MyRequests'
+                                                    path: '/Request'
                                                 }">
-										<core:Item key="{statusID}" text="{statusDesc}"/>
+										<core:Item key="{status/ID}" text="{status/description}"/>
                                         </MultiComboBox>
                                     </fb:control>				
                                 </fb:FilterGroupItem>								
@@ -93,7 +93,7 @@
 				id="table"
 				width="auto"
 				items="{
-					path: '/MyRequests',
+					path: '/Request',
 					sorter: {
 						path: 'ID',
 						descending: false
@@ -135,12 +135,12 @@
 						<cells>
                             <Button icon="sap-icon://employee" type ="Transparent" enabled="false"/>
 							<ObjectIdentifier
-								title="{firstName} {lastName}"/>
-                            <Text text="{categoryDesc}" />
+								title="{candidate/firstName} {candidate/lastName}"/>
+                            <Text text="{category/description}" />
                             <Text text="{createdAt} Due by {dueBy}" />
-                            <Text text="{statusDesc}" />
+                            <Text text="{status/description}" />
                             <Button text="Assign to me" type ="Transparent"/>
-							<Text text="{screeningTaskID}" />
+							<Text text="{candidate/processType_processTypeID}" />
 						</cells>
 					</ColumnListItem>
 				</items>

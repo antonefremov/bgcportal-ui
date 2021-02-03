@@ -84,14 +84,35 @@ sap.ui.define([
 		 */
         _onObjectMatched: function (oEvent) {
             this.objectId = oEvent.getParameter("arguments").objectId;
-            //this.screeningTaskId =  oEvent.getParameter("arguments").screeningTaskId; 
+            var processId =  oEvent.getParameter("arguments").processId; 
             this._bindView("/Request",this.objectId);
-            this._bindMasterList();
+            
             //destroying content of table everytime we enter for new candidate to get fresh data
             this.getView().byId("idEmployementHistoryTable").destroyItems();
             this.getView().byId("idDrugUseTestTable").destroyItems();
             //this._bindEmploymentHistoryTable(this.screeningTaskId);
-
+            
+            //call processType service to get the assigned screening task for the process ID of selected candidate 
+            this.getScreeningTasksList(processId);
+        },
+        
+        getScreeningTasksList :  function(processId){
+            var oThis=this;
+             var aScreeningTaskIds= [];
+                jQuery.ajax({
+                                 type: 'GET',
+                                 contentType: 'application/json',
+                                 url: "/nsHTML5Module/bgcportal/api/v1/ProcessType?$filter=processTypeID eq '" + processId + "'",
+                                 success: function (data) {
+                                   for(var i=0 ; i<data.value.length ; i++){
+                                     aScreeningTaskIds.push(data.value[i].screeningTaskType_ID);
+                                   }
+                                   oThis._bindMasterList(aScreeningTaskIds);
+                                 },
+                                 error: function (e) {
+                                     console.log("error: " + JSON.stringify(e));
+                                 }
+                     });
         },
 
 		/**
@@ -129,7 +150,7 @@ sap.ui.define([
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-        _bindMasterList: function () {
+        _bindMasterList: function (aScreeningTaskIds) {
             var oThis= this;
              oThis.list = this.getView().byId("masterPageListID");
 
@@ -186,13 +207,23 @@ sap.ui.define([
 
             // add the CustomData template to the item template
             oItemTemplate.addCustomData(oDataTemplate);
-
+            var orFilter = [];
+            for(var i =0 ; i<aScreeningTaskIds.length;i++){
+                orFilter.push(new sap.ui.model.Filter("screeningTaskTypeID", sap.ui.model.FilterOperator.EQ, aScreeningTaskIds[i]));
+                }
             oThis.list.bindItems({
                 path: "/MyScreeningTask",
+                filters: orFilter,
                 template: oItemTemplate,
                  templateShareable: true,
-                parameters: {
-                    $filter: "candidateID eq " + this.objectId
+                // parameters: {
+                //     $filter: "candidateID eq " + this.objectId
+                // }
+                 parameters: {
+                    //$filter: "screeningTaskTypeID eq " + aScreeningTaskIds[0] + " and screeningTaskTypeID eq" +  aScreeningTaskIds[1]
+                   // $filter: "EMAIL eq " + "'" + loggedUser.id + "' and ARCHIVE eq false",
+                    //$filter: new sap.ui.model.Filter(orFilter, false)
+                     //$filter: new sap.ui.model.Filter("screeningTaskTypeID", sap.ui.model.FilterOperator.EQ, aScreeningTaskIds[0])
                 }
             })
 
@@ -222,6 +253,115 @@ sap.ui.define([
         _bindEmploymentHistoryTable: function (screeningTaskId) {
             var oThis = this;
             var oTable = this.getView().byId("idEmployementHistoryTable");
+            // var oModel =oThis.getModel("objectView");
+            // var oDataPath="/EmploymentHistory";
+
+            //--------------------------------------------------------
+            // oTable.setModel(oModel);
+            // oTable.bindColumns(oDataPath, function(index, context) {
+            // var sColumnId = context.getObject().columnid;
+            // return new sap.ui.table.Column({
+            // id : sColumnId,
+            // label: sColumnId,
+            // template: sColumnId,
+            // sortProperty: sColumnId,
+            // filterProperty: sColumnId,
+            // });
+            // });
+
+            // oTable.bindRows(oDataPath);
+
+            //-----------------------------------------------------
+
+            //   oModel.read(oDataPath,null,null,null,function(){
+
+            //     metadata = oModel.getServiceMetadata();
+            //     entityRef = metadata.dataServices.schema[0].entityType[oDataIndex];
+            //     listOfProperties = entityRef.property;
+
+            //     oTable.addColumn(new sap.ui.table.Column({
+            //         label: new sap.ui.commons.Label({text:"Edit/Delete"}),
+            //         template: oButtonLayout,
+            //         width: "120px"
+                
+            //         }));
+
+            //     for ( var i = 0; i < listOfProperties.length; i++) {
+            //     oTable.addColumn(new sap.ui.table.Column({
+            //     label: new sap.ui.commons.Label({text : listOfProperties[i].name}),
+            //     template: new sap.ui.commons.TextField().bindProperty("value", listOfProperties[i].name)
+            //     }))  
+            //     }
+
+
+
+            //     oTable.setModel(oModel); // set model to Table
+            //     oTable.bindRows(oDataPath); // oDataPath is the alias of the table in the oData Service
+
+
+            //     });
+
+            //----------------------------------------------------
+
+            // oModel.attachMetadataLoaded(oModel, function () {
+            //    //fnLoadMetadata();
+            // oTable.setModel(oModel);
+            // oTable.setEntitySet("EmploymentHistory");
+            // var oMeta = oModel.getServiceMetadata();
+            // var headerFields = "";
+            // for (var i = 0; i < oMeta.dataServices.schema[0].entityType[0].property.length; i++) {
+            //     var property = oMeta.dataServices.schema[0].entityType[0].property[i];
+            //     headerFields += property.name + ",";
+            // }
+            // oTable.setInitiallyVisibleFields(headerFields);
+            //     });
+
+//------------------------------------------------------------
+            //  for (var i = 0; i < 4; i++) {
+            //                 var oColumn = new sap.m.Column("col" + i, {
+            //                     width: "1em",
+            //                     header: new sap.m.Label({
+            //                     text: {}
+            //                     })
+            //                 });
+            //             oTable.addColumn(oColumn);
+            //             }
+            //             var oCell = [];
+            //             for (var i = 0; i < 4; i++) {
+            //                             if (i === 0) {
+            //                             var cell1 = new sap.m.Text({
+            //                                             text: "{QuestionTx}"
+            //                                             });
+            //                             }
+            //             oCell.push(cell1);
+            //             }
+            //              var aColList = new sap.m.ColumnListItem("aColList", {
+            //                 cells: oCell
+            //             });
+
+            // oTable.bindItems({
+            //     path: oDataPath,
+            //     template :aColList,
+            //     parameters: {
+            //             $filter: "screeningTask_ID eq " + screeningTaskId,
+            //            // $$updateGroupId: 'EmploymentHistoryUpdateGroup',
+            //            // $expand:'status,conduct'
+            //         },
+            //     events: {
+            //        // change: this._onBindingChange.bind(this),
+            //         dataRequested: function () {
+                         
+            //         },
+            //         dataReceived: function (oEvent) {
+            //                var a = oEvent
+                        
+                        
+            //         }
+            //     }
+            //     });
+
+            //----------------------------------------------------------------
+
             oTable.bindItems({
                 //binding with EmploymentHistory entity for property update since view does not support update
                 path: "/EmploymentHistory",

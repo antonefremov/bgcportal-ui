@@ -143,8 +143,8 @@ sap.ui.define([
 			oItem.getBindingContext().requestCanonicalPath().then(function (sObjectPath) {
 				that.getRouter().navTo("object", {
                     objectId_Old: oItem.getBindingContext().getProperty("ID"),
-                    //screeningTaskId :oItem.getBindingContext().getProperty("screeningTaskID"),
-					objectId : sObjectPath.slice("/MyRequests".length) // /Products(3)->(3)
+                    processId :oItem.getBindingContext().getProperty("candidate/processType_processTypeID"),
+					objectId : sObjectPath.slice("/Request".length) // /Products(3)->(3)
 				});
 			});
 		},

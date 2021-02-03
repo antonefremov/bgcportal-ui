@@ -5,7 +5,8 @@
 	xmlns:semantic="sap.f.semantic"
     xmlns:uxap="sap.uxap"
     xmlns:l="sap.ui.layout"
-    height="100%">
+    height="100%"
+    xmlns:smartTable="sap.ui.comp.smarttable">
 
 <uxap:ObjectPageLayout id="ObjectPageLayout" showTitleInHeaderContent="true" showEditHeaderButton="true"
 				editHeaderButtonPress="handleEditBtnPress">
@@ -44,7 +45,7 @@
 
 				<l:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="BGC Completion" />  
-                     <Label text="100%" />  
+                     <Label text="{overallCompletion}%" />  
 				</l:VerticalLayout>
 
 				<l:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -82,6 +83,7 @@
                                             showNavButton="false"
                                             visible="false"
                                             >
+                                            
                                          	<Table
                                                 id="idEmployementHistoryTable"
                                                 width="auto"
@@ -89,7 +91,7 @@
                                                 growing="true"
                                                 growingScrollToLoad="true"
                                                 updateFinished="_onUpdateFinished">
-                                                <headerToolbar>
+                                                 <headerToolbar>
                                                         <OverflowToolbar>
                                                             <content>
                                                                 <Title text="Employment History" />
@@ -121,8 +123,8 @@
                                                      <Column hAlign="Center"  id="idApproveEditColumn" width="6%"> 
                                                         <Text text=""/>
                                                     </Column>
-                                                </columns>
-                                            </Table>
+                                                </columns> 
+                                            </Table>  
                                         </Page>
                                         <Page 
                                             id="DrugUseTestDetailPage"
