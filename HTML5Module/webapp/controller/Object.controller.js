@@ -83,6 +83,7 @@ sap.ui.define([
 		 * @private
 		 */
         _onObjectMatched: function (oEvent) {
+           
             this.objectId = oEvent.getParameter("arguments").objectId;
             var processId =  oEvent.getParameter("arguments").processId; 
             this._bindView("/Request",this.objectId);
@@ -98,6 +99,7 @@ sap.ui.define([
         
         getScreeningTasksList :  function(processId){
             var oThis=this;
+             this.getView().setBusy(true);
              var aScreeningTaskIds= [];
                 jQuery.ajax({
                                  type: 'GET',
@@ -108,9 +110,11 @@ sap.ui.define([
                                      aScreeningTaskIds.push(data.value[i].screeningTaskType_ID);
                                    }
                                    oThis._bindMasterList(aScreeningTaskIds);
+                                    oThis.getView().setBusy(false);
                                  },
                                  error: function (e) {
                                      console.log("error: " + JSON.stringify(e));
+                                     oThis.getView().setBusy(false);
                                  }
                      });
         },
