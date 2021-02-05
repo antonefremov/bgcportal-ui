@@ -220,19 +220,21 @@ sap.ui.define([
                 filters: orFilter,
                 template: oItemTemplate,
                  templateShareable: true,
-                // parameters: {
-                //     $filter: "candidateID eq " + this.objectId
-                // }
                  parameters: {
+                     $filter: "candidateID eq " + this.objectId
+                }
+                // parameters: {
                     //$filter: "screeningTaskTypeID eq " + aScreeningTaskIds[0] + " and screeningTaskTypeID eq" +  aScreeningTaskIds[1]
                    // $filter: "EMAIL eq " + "'" + loggedUser.id + "' and ARCHIVE eq false",
                     //$filter: new sap.ui.model.Filter(orFilter, false)
                      //$filter: new sap.ui.model.Filter("screeningTaskTypeID", sap.ui.model.FilterOperator.EQ, aScreeningTaskIds[0])
-                }
+                //}
             })
 
             oThis.list.getBinding("items").attachDataReceived(function (){
+                if(oThis.list.getItems().length>0){
                   oThis.list.getItems()[0].firePress();
+                }
             });
         },
 

@@ -61,6 +61,7 @@
                 <l:VerticalLayout class="sapUiSmallMarginEnd">
 					<Label text="Status" />
                     <Label text="{status/description}"/>
+                    <Label text="{candidate/sfCandidateID}" visible="false"/>
 				</l:VerticalLayout>
 
 			     </FlexBox> 

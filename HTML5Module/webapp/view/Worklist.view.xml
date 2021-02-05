@@ -126,6 +126,9 @@
                     <Column hAlign="Center" width="0%" visible="false">
 						<Text text="" />
 					</Column>
+                    <Column hAlign="Center" width="0%" visible="false">
+						<Text text="" />
+					</Column>
 				</columns>
 
 				<items>
@@ -141,6 +144,7 @@
                             <Text text="{status/description}" />
                             <Button text="Assign to me" type ="Transparent"/>
 							<Text text="{candidate/processType_processTypeID}" />
+                            <Text text="{candidate/sfCandidateID}" />
 						</cells>
 					</ColumnListItem>
 				</items>
