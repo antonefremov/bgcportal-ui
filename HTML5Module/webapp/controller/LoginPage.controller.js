@@ -8,7 +8,7 @@ sap.ui.define([
 ], function (BaseController, JSONModel, History, jquery, formatter) {
     "use strict";
 
-    return BaseController.extend("ns.HTML5Module.controller.Object", {
+    return BaseController.extend("ns.HTML5Module.controller.LoginPage", {
 
         formatter: formatter,
 

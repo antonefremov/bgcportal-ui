@@ -481,7 +481,7 @@ sap.ui.define([
             //but can't see anything like "content". after adding "/content" it gives 400 error.
             // need to check how to pass the id and then content so that it makes url like hardcoded line here
 
-            var sSource = sServiceURL + "Documents(c657194e-7632-473c-bd03-145cd74aa0e1)/content";
+            var sSource = sServiceURL + "Documents(AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA)/content";
             // var sSource = sServiceURL + "Documents?$filter=screeningTask_ID eq "+ screeningTaskId +"/content";
 
             opdfViewer.setSource(sSource);

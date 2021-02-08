@@ -117,31 +117,24 @@
           {
           "pattern": "",
           "name": "loginPage",
-          "target": [
-            "loginPage"
-          ]
+          "target": "loginPage"
         },
         {
           "pattern": "worklist",
           "name": "worklist",
-          "target": [
-            "worklist"
-          ]
+          "target": "worklist"
         },
         {
-          "pattern": "worklist/ {processId} , {objectId}",
+          "pattern": "object/{processId},{objectId}",
           "name": "object",
-          "target": [
-            "object"
-          ]
+          "target": "object"
         }
       ],
       "targets": {
         "loginPage": {
           "viewName": "LoginPage",
           "viewId": "loginPage",
-          "viewLevel": 1,
-          "title": ""
+          "viewLevel": 1
         },
         "worklist": {
           "viewName": "Worklist",
