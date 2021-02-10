@@ -21,18 +21,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            // Model used to manipulate control states. The chosen values make sure,
-            // detail page shows busy indication immediately so there is no break in
-            // between the busy indication for loading the view's meta data
-            // var oViewModel = new JSONModel({
-            //     busy: true,
-            //     delay: 0
-            // });
-            // this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
-            // this.setModel(oViewModel, "objectView");
-            // this.oController = this;
-            // this._pdfViewer = new sap.m.PDFViewer();;
-            // this.getView().addDependent(this._pdfViewer);
+            
         },
         OnSignInButtonPress: function(){     
             var user = this.getView().byId("userInputId").getValue();   

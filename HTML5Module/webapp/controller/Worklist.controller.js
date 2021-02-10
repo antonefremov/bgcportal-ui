@@ -1,3 +1,4 @@
+// @ts-nocheck
 sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",

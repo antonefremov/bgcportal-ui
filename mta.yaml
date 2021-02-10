@@ -8,6 +8,8 @@ modules:
   requires:
   - name: BGCportal_html_repo_runtime
   - name: BGCportal-destination
+  properties:
+    SEND_XFRAMEOPTIONS: false
   parameters:
     disk-quota: 256M
     memory: 256M
