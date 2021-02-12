@@ -26,6 +26,7 @@ sap.ui.define([
         OnSignInButtonPress: function(){     
             var user = this.getView().byId("userInputId").getValue();   
             var password = this.getView().byId("passwordInputId").getValue(); 
+            //checking with one dummy user needed to show in customer demo
             if(user === "Dummy" && password === "Welcome"){
                this.getRouter().navTo("worklist");
             }else{

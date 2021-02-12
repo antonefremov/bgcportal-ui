@@ -40,7 +40,7 @@ sap.ui.define([
         onAfterRendering: function () {
             var oSplitCont = this.getView().byId("SplitContDemo"),
                 ref = oSplitCont.getDomRef() && oSplitCont.getDomRef().parentNode;
-            // set all parent elements to 100% height, this should be done by app developer, but just in case
+            // set all parent elements to 100% height, 
             if (ref && !ref._sapUI5HeightFixed) {
                 ref._sapUI5HeightFixed = true;
                 while (ref && ref !== document.documentElement) {
@@ -91,7 +91,6 @@ sap.ui.define([
             //destroying content of table everytime we enter for new candidate to get fresh data
             this.getView().byId("idEmployementHistoryTable").destroyItems();
             this.getView().byId("idDrugUseTestTable").destroyItems();
-            //this._bindEmploymentHistoryTable(this.screeningTaskId);
             
             //call processType service to get the assigned screening task for the process ID of selected candidate 
             this.getScreeningTasksList(processId);
@@ -131,10 +130,7 @@ sap.ui.define([
             this.getView().bindElement({
                 path: sObjectPath + ID,
                 parameters: {
-                                // $filter: "ID eq " + ID,
-                                // $$updateGroupId: 'EmploymentHistoryUpdateGroup',
-                                $expand:'category,status,assignedToAgent,candidate'
-                                
+                           $expand:'category,status,assignedToAgent,candidate'                                
                            },
                 events: {
                     change: this._onBindingChange.bind(this),
@@ -282,9 +278,7 @@ sap.ui.define([
         //load fragment with dialog for approve and reject employment History
         _openAprroveRejectDialog: function(oEvent){
             var oThis = this;
-           // oThis.getView().setBusy(true);
-          
-                if (!oThis._oDialog) {
+               if (!oThis._oDialog) {
                     oThis._oDialog = sap.ui.xmlfragment("ns.HTML5Module.Fragments.ApproveRejectDialog", this);
                 }  
                  oThis._oDialog.setBusy(true);         
@@ -299,9 +293,7 @@ sap.ui.define([
                          
                     },
                     dataReceived: function () {
-                         oThis._oDialog.setBusy(false);
-                        //oThis.getView().setBusy(false);
-                        
+                         oThis._oDialog.setBusy(false);                        
                     }
                 }
                 
@@ -384,7 +376,7 @@ sap.ui.define([
                
                oThis._oApproveBGCDialog.open();
         },
-         onCancelBGCPress: function(oEvent){
+        onCancelBGCPress: function(oEvent){
              this._oApproveBGCDialog.close();
         },
         onApproveBGCPress: function(oEvent){
